@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cloud.veezee.android.activities.HomePageActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/homePage_app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        app:elevation="0dp"
+        android:paddingTop="24dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <FrameLayout
+            android:id="@+id/homePage_toolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="0dp">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:gravity="left"
+                android:layoutDirection="ltr"
+                android:textDirection="ltr"
+                app:contentInsetStartWithNavigation="0dp"
+                app:titleMarginStart="0dp"
+                app:contentInsetStart="0dp"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:layout_scrollFlags="scroll|enterAlways"/>
+
+                <ImageView
+                    android:id="@+id/logotype"
+                    android:layout_width="110dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:adjustViewBounds="true"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_vz_lt_w" />
+
+            <com.miguelcatalan.materialsearchview.MaterialSearchView
+                android:id="@+id/homePage_material_searchView"
+                app:searchBackground="?attr/colorPrimary"
+                android:textColor="?attr/primaryText"
+                android:textColorHint="?attr/secondaryText"
+                app:searchBackIcon="@drawable/ic_arrow_back"
+                app:searchCloseIcon="@drawable/ic_close"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </FrameLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tab_layout_height"
+            app:tabIndicatorHeight="1dp"
+            android:background="?attr/colorPrimary"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/activity_home_page_content"/>
+
+</android.support.design.widget.CoordinatorLayout>

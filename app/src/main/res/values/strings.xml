@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">veezee</string>
+    <string name="notificationChannelName">AudioPlayer</string>
+    <string name="title_activity_setting">SettingActivity</string>
+
+    <string name="submit">Submit</string>
+    <string name="loading">Please wait...</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="login_google">Login with Google</string>
+    <string name="login">Login</string>
+    <string name="register">Create new account</string>
+    <string name="create_playlist">Create new Playlist</string>
+
+    <string name="google_error">Google sign in is not available right now. Please use email to sign in/sign up.</string>
+    <string name="request_failed">Something went wrong. Try again later</string>
+    <string name="expired">Your account is expired</string>
+    <string name="title_activity_albums_track_list">AlbumsTrackListActivity</string>
+
+    <!--<string name="google_server_client_server_id">867262283545-i5hb0qngsg4f62p666m8rogj7bj7i7hj.apps.googleusercontent.com</string>-->
+    <!--<string name="client_id">{"installed":{"client_id":"867262283545-mk9oid9m5keiae5poo2l02bgrgasrcf8.apps.googleusercontent.com","project_id":"veezee-198113","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}</string>-->
+</resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/plus_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:id="@+id/plus_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <cloud.veezee.android.externalComponentsAndLibs.SquareImage
+                android:id="@+id/plus_image"
+                android:layout_width="match_parent"
+                android:layout_height="137dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/image_border_radius"
+                android:src="@drawable/plus_accent"/>
+
+            <TextView
+                android:id="@+id/plus_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="3dp"
+                android:gravity="center_horizontal"
+                android:text="@string/create_playlist"
+                android:textSize="13sp"
+                android:textColor="@color/white_accent" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

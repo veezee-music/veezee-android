@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_page_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+    android:elevation="-1dp"
+    tools:context="cloud.veezee.android.activities.HomePageActivity"
+    tools:showIn="@layout/activity_home_page">
+
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="bottom"
+        android:background="@android:color/transparent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        sothree:layout_constraintBottom_toBottomOf="parent"
+        sothree:umanoScrollableView="@+id/view_pager_container"
+        sothree:umanoDragView="@id/panel_child"
+        sothree:umanoInitialState="hidden"
+        sothree:umanoParallaxOffset="45dp"
+        sothree:umanoShadowHeight="0dp"
+        sothree:umanoPanelHeight="55dp">
+
+        <cloud.veezee.android.externalComponentsAndLibs.NonSwipeableViewPager
+            android:id="@+id/view_pager_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"/>
+
+        <include layout="@layout/content_player" />
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+    <!--<android.support.design.widget.BottomNavigationView-->
+        <!--android:id="@+id/navigation"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="?attr/colorPrimary"-->
+        <!--app:itemIconTint="@color/nav_tabs_text_selector"-->
+        <!--app:itemTextColor="@color/nav_tabs_text_selector"-->
+        <!--android:visibility="gone"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:menu="@menu/navigation" />-->
+
+</android.support.constraint.ConstraintLayout>

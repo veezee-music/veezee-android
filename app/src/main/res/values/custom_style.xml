@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="dialogTextInputLayout">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="dialogEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/purple_dark_primary_text</item>
+        <item name="android:backgroundTint">@color/divider_light</item>
+        <item name="android:state_single">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:imeOptions">actionDone</item>
+    </style>
+
+    <style name="btnAccent">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:clickable">true</item>
+        <item name="android:backgroundTint">@color/purple_dark_accent</item>
+        <item name="android:textColor">@color/purple_dark_primary_text</item>
+    </style>
+
+
+</resources>

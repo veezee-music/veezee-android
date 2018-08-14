@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/album_item_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/album_item_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <cloud.veezee.android.externalComponentsAndLibs.SquareImage
+                android:id="@+id/album_item_cover"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@drawable/image_border_radius"
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder" />
+
+            <TextView
+                android:id="@+id/album_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:maxLines="1"
+                android:text="Title"
+                android:textColor="?attr/primaryText"
+                android:textSize="@dimen/title" />
+
+            <TextView
+                android:id="@+id/album_item_artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="artist"
+                android:textColor="?attr/secondaryText"
+                android:textSize="@dimen/artist_name"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cloud.veezee.android.activities.HomePageActivity">
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/album_app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        android:paddingTop="24dp"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/album_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:gravity="center_horizontal"
+                android:layoutDirection="ltr"
+                android:textDirection="ltr"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:titleMarginStart="0dp" />
+
+            <ImageView
+                android:id="@+id/logotype"
+                android:layout_width="110dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:adjustViewBounds="true"
+                android:gravity="center_horizontal|center_vertical"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_vz_lt_w" />
+
+        </FrameLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/activity_album_content" />
+
+</android.support.design.widget.CoordinatorLayout>

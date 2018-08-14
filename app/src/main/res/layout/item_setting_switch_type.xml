@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimary"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/setting_item_type_switch_container"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:clipToPadding="false"
+        android:background="@android:color/transparent">
+
+        <!--<TextView-->
+            <!--android:id="@+id/setting_item_type_switch_text_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:text="Simple Text Item"-->
+            <!--android:textColor="?attr/primaryText"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintHorizontal_bias="0.08"-->
+            <!--app:layout_constraintHorizontal_chainStyle="spread_inside"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--app:layout_constraintLeft_toRightOf="@+id/setting_item_type_switch_icon"-->
+            <!--app:layout_constraintRight_toLeftOf="@+id/setting_item_type_switch_switch"-->
+            <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+        <Switch
+            android:id="@+id/setting_item_type_switch_switch"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:text="Simple Text Item"
+            android:textColor="?attr/primaryText"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/setting_item_type_switch_icon"
+            android:theme="@style/CBSwitch"/>
+
+        <ImageView
+            android:id="@+id/setting_item_type_switch_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/divider_light"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="-18dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>

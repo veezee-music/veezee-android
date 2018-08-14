@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_dark_primary">#170a2d</color>
+    <color name="purple_dark_primary_dark">#170a2d</color>
+    <color name="purple_dark_accent">#E83223</color>
+    <color name="purple_dark_primary_text">#FFFFFF</color>
+    <color name="purple_dark_secondary_text">#808080</color>
+
+    <color name="white_primary">#FFFFFF</color>
+    <color name="white_primary_dark">#FFFFFF</color>
+    <color name="white_accent">#E83223</color>
+    <color name="white_primary_text">#000000</color>
+    <color name="white_secondary_text">#808080</color>
+
+    <color name="black_primary">#000000</color>
+    <color name="black_primary_dark">#000000</color>
+    <color name="black_accent">#E83223</color>
+    <color name="black_primary_text">#FFFFFF</color>
+    <color name="black_secondary_text">#808080</color>
+
+    <color name="accent">#E83223</color>
+    <color name="black">#000000</color>
+    <color name="gray">#808080</color>
+    <color name="gray_light">#b4b4b4</color>
+    <color name="white">#FFFFFF</color>
+    <color name="m_progress">#FFF</color>
+    <color name="divider_light">#36a6a6a6</color>
+    <color name="login_container_background_color">#6a000000</color>
+
+</resources>

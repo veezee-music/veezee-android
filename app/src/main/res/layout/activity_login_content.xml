@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_primary_dark"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="cloud.veezee.android.activities.LoginActivity">
+
+    <FrameLayout
+        android:id="@+id/logo_container"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@color/login_container_background_color"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/login_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:alpha="0"
+        android:background="@drawable/login_container_background"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/center_vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/center_vertical">
+
+        <Button
+            android:id="@+id/login_button"
+            style="@style/btnAccent"
+            android:layout_width="match_parent"
+            android:onClick="buttons"
+            android:text="@string/login" />
+
+        <Button
+            android:id="@+id/login_google_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/googleg_standard_color_18"
+            android:onClick="buttons"
+            android:text="@string/login_google"
+            android:textAllCaps="false" />
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="-8dp"
+            android:layout_marginRight="-8dp"
+            android:layout_marginTop="10dp">
+
+            <View
+                android:id="@+id/right_line"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@color/purple_dark_secondary_text"
+                app:layout_constraintBottom_toBottomOf="@+id/OR"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/OR"
+                app:layout_constraintTop_toTopOf="@+id/OR" />
+
+            <TextView
+                android:id="@+id/OR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="OR"
+                android:textColor="@color/purple_dark_primary_text"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@id/right_line"
+                app:layout_constraintRight_toLeftOf="@id/left_line" />
+
+            <View
+                android:id="@+id/left_line"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@color/purple_dark_secondary_text"
+                app:layout_constraintBottom_toBottomOf="@+id/OR"
+                app:layout_constraintLeft_toRightOf="@+id/OR"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/OR" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <Button
+            android:id="@+id/register_button"
+            style="@style/btnAccent"
+            android:layout_width="match_parent"
+            android:onClick="buttons"
+            android:text="@string/register" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/login_logo"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:src="@drawable/logo_basic_white"
+        app:layout_constraintBottom_toBottomOf="@id/center_vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/center_vertical" />
+
+    <ProgressBar
+        android:id="@+id/validate_loading"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="75dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_vertical"
+        app:layout_constraintTop_toTopOf="@+id/bottom_vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:indeterminateTint="@color/m_progress"/>
+
+    <Button
+        android:id="@+id/retry_button"
+        style="@style/btnAccent"
+        android:layout_width="110dp"
+        android:text="Retry"
+        android:visibility="gone"
+        android:onClick="buttons"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_vertical"
+        app:layout_constraintTop_toTopOf="@+id/bottom_vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/offline_button"
+        style="@style/btnAccent"
+        android:layout_width="110dp"
+        android:text="Offline Mode"
+        android:visibility="gone"
+        android:onClick="buttons"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_vertical"
+        app:layout_constraintTop_toTopOf="@+id/bottom_vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/bottom_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="100dp" />
+
+</android.support.constraint.ConstraintLayout>
