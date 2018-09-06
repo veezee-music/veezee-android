@@ -78,6 +78,11 @@ You'll need to use **Android Studio**.
 - Wait for Android Studio to complete the indexing proccess and then sync Gradle and then build the project.
 - Select a device or emulator with a screen size **equal or larger than 5 inch** (e.g. Nexus 5, Google Pixel, Galaxy S9) and run the project
 
+#### Common Android Studio issues
+
+- You may have to remove `fabric.properties` (if it exists) from the `/app` directory and let Gradle rebuild it.
+- Be aware of the different results you may get when using quotation marks around values in `gradle.properties` file
+
 ### Setting up a server (IMPORTANT!)
 
 **veezee** depends on a functioning HTTPS API server to show music lists and play music as well as do user management and provide analytics data. An incomplete example is provided by the veezee team that can be used as a starting point but it's not completely safe and must be reviewed thoroughly before used in a production environment.

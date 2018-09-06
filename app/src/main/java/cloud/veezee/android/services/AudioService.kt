@@ -5,6 +5,7 @@ import android.content.*
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color.*
+import android.media.AudioManager
 import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.*
@@ -14,6 +15,8 @@ import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.media.session.MediaButtonReceiver
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.telephony.PhoneStateListener
+import android.telephony.TelephonyManager
 import android.util.Log
 import android.util.Patterns
 import com.bumptech.glide.request.target.SimpleTarget
@@ -59,7 +62,8 @@ class AudioService : Service() {
     private var TAG = "AudioService";
     private val context = this;
     private var resultReceiver: ResultReceiver? = null;
-    private var broadcastReceiver: BroadcastReceiver? = null;
+    private var audioPlayerControlsBroadcastReceiver: BroadcastReceiver? = null;
+    private var audioBecomingNoisyBroadcastReceiver: BroadcastReceiver? = null;
     private var player: SimpleExoPlayer? = null;
     private var indexBackup = -1;
     private var playList: ArrayList<PlayableItem>? = null;
@@ -76,6 +80,10 @@ class AudioService : Service() {
     private var session: MediaSessionCompat? = null;
     private var state: PlaybackStateCompat.Builder? = null;
     private var notificationManager: NotificationManager? = null;
+
+    private var ongoingCall: Boolean = false;
+    private var phoneStateListener: PhoneStateListener? = null;
+    private var telephonyManager: TelephonyManager? = null;
 
     // callBacks
 
@@ -167,6 +175,33 @@ class AudioService : Service() {
         }
     }
 
+    // handle incoming calls
+    private fun createPhoneStateListener() {
+        telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager;
+        phoneStateListener = object : PhoneStateListener() {
+            override fun onCallStateChanged(state:Int, incomingNumber:String) {
+                when (state) {
+                //if at least one call exists or the phone is ringing
+                //pause the MediaPlayer
+                    TelephonyManager.CALL_STATE_OFFHOOK,
+                    TelephonyManager.CALL_STATE_RINGING -> {
+                        pausePlayer();
+                        ongoingCall = true;
+                    };
+                    TelephonyManager.CALL_STATE_IDLE -> {
+                        // Phone idle. Start playing.
+                        if (ongoingCall)
+                        {
+                            ongoingCall = false;
+                            //startPlayer();
+                            pausePlayer();
+                        }
+                    };
+                }
+            }
+        }
+    }
+
     private val exoPlayerListener = object : Player.EventListener {
         override fun onSeekProcessed() {
 
@@ -246,13 +281,27 @@ class AudioService : Service() {
         }
     }
 
-    private fun registerBroadCast() {
-        val iF = IntentFilter(AudioPlayer.ACTION_PLAYER_CONTROLLER);
-        LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver!!, iF);
+    private fun registerBroadcastReceivers() {
+        val audioPlayerControllerIntentFilter = IntentFilter(AudioPlayer.ACTION_PLAYER_CONTROLLER);
+        LocalBroadcastManager.getInstance(context).registerReceiver(audioPlayerControlsBroadcastReceiver!!, audioPlayerControllerIntentFilter);
+
+        val audioBecomingNoisyIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        registerReceiver(audioBecomingNoisyBroadcastReceiver!!, audioBecomingNoisyIntentFilter);
     }
 
-    private fun unRegisterBroadCast() {
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver!!);
+    private fun unregisterBroadcastReceivers() {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(audioPlayerControlsBroadcastReceiver!!);
+        unregisterReceiver(audioBecomingNoisyBroadcastReceiver!!);
+    }
+
+    private fun registerPhoneStateListener() {
+        telephonyManager?.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+    }
+
+    private fun unregisterPhoneStateListener() {
+        if(phoneStateListener != null) {
+            telephonyManager?.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+        }
     }
 
     private fun currentPositionBundleFactory(): Bundle {
@@ -574,8 +623,11 @@ class AudioService : Service() {
     override fun onCreate() {
         super.onCreate();
 
-        broadcastReceiver = LocalBroadCastReceiver();
-        registerBroadCast();
+        audioPlayerControlsBroadcastReceiver = AudioPlayerControlsBroadcastReceiver();
+        audioBecomingNoisyBroadcastReceiver = AudioBecomingNoisyBroadcastReceiver();
+        registerBroadcastReceivers();
+        createPhoneStateListener();
+        registerPhoneStateListener();
 
         notificationId = System.currentTimeMillis().toInt();
         notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager;
@@ -588,7 +640,8 @@ class AudioService : Service() {
 
         stopForeground(true);
         notificationManager?.cancel(notificationId);
-        unRegisterBroadCast();
+        unregisterBroadcastReceivers();
+        unregisterPhoneStateListener();
         handler.removeCallbacks(updateProgressAction);
         releasePlayer();
     }
@@ -618,7 +671,7 @@ class AudioService : Service() {
         return START_NOT_STICKY;
     }
 
-    inner class LocalBroadCastReceiver : BroadcastReceiver() {
+    inner class AudioPlayerControlsBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.flags) {
                 AudioPlayer.FLAG_PLAY -> startPlayer();
@@ -635,6 +688,12 @@ class AudioService : Service() {
                     seekTo(position);
                 };
             }
+        }
+    }
+
+    inner class AudioBecomingNoisyBroadcastReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            pausePlayer();
         }
     }
 }
