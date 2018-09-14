@@ -2,12 +2,14 @@ package cloud.veezee.android.utils
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Vibrator
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -18,7 +20,10 @@ import com.bumptech.glide.request.transition.Transition
 import cloud.veezee.android.utils.interfaces.OnDialogButtonsClickListener
 import cloud.veezee.android.models.Track
 import cloud.veezee.android.R
+import cloud.veezee.android.activities.AlbumActivity
 import cloud.veezee.android.application.GlideApp
+import cloud.veezee.android.models.Album
+import com.google.gson.Gson
 
 class TrackMenu {
 
@@ -40,9 +45,10 @@ class TrackMenu {
     private fun vibrate(context: Context) {
         val v: Vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator;
         v.vibrate(40);
+        //view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
     }
 
-    fun whit(context: Context): TrackMenu {
+    fun with(context: Context): TrackMenu {
         this.context = context;
         dialog = AlertDialog.Builder(context);
 
@@ -81,7 +87,6 @@ class TrackMenu {
     }
 
     fun content(track: Track): TrackMenu {
-
         this.track = track;
 
         title?.text = track.title;
@@ -104,7 +109,20 @@ class TrackMenu {
             }
         });
 
+        artwork?.setOnClickListener {
+            if(track.album != null) {
+                //showAlbumPage(track.album!!);
+            }
+        }
+
         return this;
+    }
+
+    fun showAlbumPage(album: Album) {
+        val albumActivity = Intent(context, AlbumActivity::class.java);
+        albumActivity.putExtra("album", Gson().toJson(album));
+        albumActivity.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        context.startActivity(albumActivity);
     }
 
     fun show() {
@@ -120,9 +138,9 @@ class TrackMenu {
         albumTitle = view.findViewById(R.id.dialog_menu_album_title);
         artist = view.findViewById(R.id.dialog_menu_artist);
 
-        add?.setOnClickListener({
+        add?.setOnClickListener {
             listener.addClickListener(d);
-        });
+        };
 
         cancel?.setOnClickListener {
             listener.cancelCLickListener(d);

@@ -37,7 +37,7 @@
 
 - Supports tracks, albums, playlists and genres
 - User management with email/password and **Google** (Supports cross-device sessions)
-- Supports remote (**MongoDB**) and local-offline (**CouchDB**) databases
+- Supports remote (**MongoDB**) and local-offline (**Couchbase**) databases
 - **Offline mode**
 - **Theme support**
 - Sharing
@@ -48,7 +48,7 @@
 - Optimized for all screen aspect ratios
 - Uses **ConstraintLayout**
 - RxKotlin (Limited use)
-- High performance audio streamming engine (using **[ExoPlayer](https://github.com/google/ExoPlayer)**)
+- High performance audio streaming engine (using **[ExoPlayer](https://github.com/google/ExoPlayer)**)
 - Guest mode (Without login)
 - Many custom views for different pages
 - Beautiful animations and transitions

@@ -171,7 +171,7 @@ class SearchVerticalListAdapter(val context: Context, private val searchItems: A
                     if(Constants.GUEST_MODE)
                         view?.findViewById<Button>(R.id.dialog_menu_add)?.visibility = View.GONE;
 
-                    TrackMenu().whit(context)
+                    TrackMenu().with(context)
                             .view(view)
                             .transparentBackground()
                             .gravity(Gravity.BOTTOM)

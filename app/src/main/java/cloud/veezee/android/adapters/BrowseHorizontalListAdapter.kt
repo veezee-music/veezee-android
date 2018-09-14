@@ -104,12 +104,12 @@ class BrowseHorizontalListAdapter(private val context: Context, private val home
                 imageUrl = album?.image!!;
                 artWork = holder.artWork;
 
-                holder.container.setOnClickListener({
+                holder.container.setOnClickListener {
                     val albumActivity = Intent(context, AlbumActivity::class.java);
                     albumActivity.putExtra("album", Gson().toJson(album));
                     albumActivity.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
                     context.startActivity(albumActivity);
-                });
+                };
 
             }
             is GenreViewHolder -> {
@@ -174,7 +174,7 @@ class BrowseHorizontalListAdapter(private val context: Context, private val home
                     if(track.image == null)
                         track.image = track.album?.image;
 
-                    TrackMenu().whit(context)
+                    TrackMenu().with(context)
                             .view(view)
                             .transparentBackground()
                             .gravity(Gravity.BOTTOM)
@@ -199,6 +199,7 @@ class BrowseHorizontalListAdapter(private val context: Context, private val home
 
             }
         }
+
         GlideApp.with(context).load(imageUrl).thumbnail(0.1f).into(artWork!!);
     }
 

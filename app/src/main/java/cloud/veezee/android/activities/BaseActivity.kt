@@ -45,7 +45,6 @@ import cloud.veezee.android.services.AudioService
 import cloud.veezee.android.utils.*
 import org.json.JSONObject
 
-
 open class BaseActivity : AppCompatActivity() {
 
     companion object {
@@ -342,9 +341,9 @@ open class BaseActivity : AppCompatActivity() {
         slidingLayout?.addPanelSlideListener(panelSlidingListener);
         bottomPlayerLayout?.setOnTouchListener(bottomPlayerTouch);
 
-        bottomPlayerLayout?.setOnClickListener({
+        bottomPlayerLayout?.setOnClickListener {
             expandPanel();
-        });
+        };
 
         close?.setOnClickListener {
             controller?.destroyPlayer();
