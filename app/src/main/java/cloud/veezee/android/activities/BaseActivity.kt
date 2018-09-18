@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_home_page_content.*
 import kotlinx.android.synthetic.main.content_player.*
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.graphics.drawable.DrawableCompat
+import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.*
 import cloud.veezee.android.Constants
@@ -88,7 +89,7 @@ open class BaseActivity : AppCompatActivity() {
     private var dragging = false;
     private var TAG = "BaseActivity";
 
-    private var closeBottomPlayerReceiver: BroadcastReceiver = CloseBottomPlayerReceiver();
+    private var bottomPlayerStateReceiver: BroadcastReceiver = BottomPlayerStateReceiver();
     private var addToPlayListReceiver: BroadcastReceiver = AddToPlayListReceiver();
     private var settingChangedReceiver: BroadcastReceiver = SettingChangedReceiver();
     private var metaDataReceiver: BroadcastReceiver = AudioReceiver();
@@ -416,18 +417,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun closeBottomPlayer() {
-        val timer = object : CountDownTimer(350, 350) {
-            override fun onTick(millisUntilFinished: Long) {
-
-            }
-
-            override fun onFinish() {
-                if (slidingLayout?.panelState != SlidingUpPanelLayout.PanelState.HIDDEN) {
-                    hiddenBottomPlayer();
-                }
-            }
-        }
-        timer.start();
+        hiddenBottomPlayer();
     }
 
     protected fun panelState(): SlidingUpPanelLayout.PanelState? = slidingLayout?.panelState;
@@ -549,6 +539,9 @@ open class BaseActivity : AppCompatActivity() {
         DrawableCompat.setTint(player_max_volume?.drawable!!, primaryText);
         DrawableCompat.setTint(player_min_volume?.drawable!!, primaryText);
         DrawableCompat.setTint(arrowDown?.drawable!!, primaryText);
+        DrawableCompat.setTint(bottom_player_close?.drawable!!, primaryText);
+        DrawableCompat.setTint(bottom_player_play?.drawable!!, primaryText);
+        DrawableCompat.setTint(bottom_player_pause?.drawable!!, primaryText);
 
         playerSeek?.thumb?.setColorFilter(accent, PorterDuff.Mode.SRC_IN);
         playerSeek?.refreshDrawableState();
@@ -578,6 +571,9 @@ open class BaseActivity : AppCompatActivity() {
         DrawableCompat.setTint(player_max_volume?.drawable!!, accentColor);
         DrawableCompat.setTint(player_min_volume?.drawable!!, accentColor);
         DrawableCompat.setTint(arrowDown?.drawable!!, accentColor);
+        DrawableCompat.setTint(bottom_player_close?.drawable!!, accentColor);
+        DrawableCompat.setTint(bottom_player_play?.drawable!!, accentColor);
+        DrawableCompat.setTint(bottom_player_pause?.drawable!!, accentColor);
 
         playerSeek?.progressDrawable?.setColorFilter(accentColor, PorterDuff.Mode.SRC_IN);
         playerSeek?.thumb?.setColorFilter(accentColor, PorterDuff.Mode.SRC_IN);
@@ -593,7 +589,7 @@ open class BaseActivity : AppCompatActivity() {
         val setting = App.setting;
         setTheme(applyTheme(setting?.theme!!));
 
-        LocalBroadcastManager.getInstance(context).registerReceiver(closeBottomPlayerReceiver, IntentFilter(AudioPlayer.ACTION_CLOSE_BOTTOM_PLAYER));
+        registerReceiver(bottomPlayerStateReceiver, IntentFilter(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE));
         LocalBroadcastManager.getInstance(context).registerReceiver(settingChangedReceiver, IntentFilter(Setting.SETTING_NOTIFICATION));
         LocalBroadcastManager.getInstance(context).registerReceiver(metaDataReceiver, IntentFilter(AudioPlayer.ACTION_META_DATA));
 
@@ -628,7 +624,7 @@ open class BaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy();
 
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(closeBottomPlayerReceiver);
+        unregisterReceiver(bottomPlayerStateReceiver);
         LocalBroadcastManager.getInstance(context).unregisterReceiver(settingChangedReceiver);
         LocalBroadcastManager.getInstance(context).unregisterReceiver(metaDataReceiver);
     }
@@ -676,9 +672,15 @@ open class BaseActivity : AppCompatActivity() {
     }
 
 
-    inner class CloseBottomPlayerReceiver : BroadcastReceiver() {
+    inner class BottomPlayerStateReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            closeBottomPlayer();
+
+            val open = intent?.getBooleanExtra("open", false);
+            if (open!!) {
+                openBottomPlayer();
+            } else {
+                closeBottomPlayer();
+            }
         }
     }
 
@@ -687,7 +689,7 @@ open class BaseActivity : AppCompatActivity() {
             val bottomSheetDialogFragment = PlayListOptionFragment();
 
             val bundle = Bundle();
-            bundle.putString("trackBundle", intent?.extras?.getString("track"))
+            bundle.putString("trackBundle", intent?.extras?.getString("track"));
             bottomSheetDialogFragment.arguments = bundle;
             bottomSheetDialogFragment.show(supportFragmentManager, bottomSheetDialogFragment.tag);
         }

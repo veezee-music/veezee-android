@@ -28,7 +28,7 @@ class AudioPlayer {
         const val FLAG_REPEAT = 9;
 
         const val ACTION_PLAYER_CONTROLLER = "playerController";
-        const val ACTION_CLOSE_BOTTOM_PLAYER = "CloseBottomPlayer";
+        const val ACTION_CHANGE_BOTTOM_PLAYER_STATE = "ACTION_CHANGE_BOTTOM_PLAYER_STATE";
         const val ACTION_META_DATA = "MetaDataReceiver";
 
         @SuppressLint("StaticFieldLeak")
@@ -71,11 +71,11 @@ class AudioPlayer {
             val i = Intent(context, AudioService::class.java);
             i.putExtra("playList", serializePlayList);
             i.putExtra("index", index);
-            if (Build.VERSION.SDK_INT < 26)
+            if (Build.VERSION.SDK_INT < 26) {
                 startService(i);
-            else
+            } else {
                 startForegroundService(i);
-
+            }
         } else {
             newTrack(index);
         }
@@ -93,7 +93,9 @@ class AudioPlayer {
         myPlayableItem = null;
         myIndex = -1
 
-        sendBroadCast(Intent(ACTION_CLOSE_BOTTOM_PLAYER));
+        val i = Intent(ACTION_CHANGE_BOTTOM_PLAYER_STATE)
+        i.putExtra("open", false);
+        context.sendBroadcast(i);
     }
 
     fun play() {

@@ -67,7 +67,7 @@ class AudioService : Service() {
     private var player: SimpleExoPlayer? = null;
     private var indexBackup = -1;
     private var playList: ArrayList<PlayableItem>? = null;
-    private var notificationId = 0;
+    private var notificationId = 50;
     private val handler = Handler();
     private val delayMs: Long = 1000;
     private var prevState = PlaybackStateCompat.STATE_PAUSED;
@@ -248,7 +248,7 @@ class AudioService : Service() {
                 } else if (!playWhenReady && prevState == PlaybackStateCompat.STATE_PLAYING) {
                     prevState = PlaybackStateCompat.STATE_PAUSED;
                     startForeground(notificationId, generateNotification());
-                    if (Build.VERSION.SDK_INT < 25)
+                    //if (Build.VERSION.SDK_INT < 25)
                         stopForeground(false);
                 }
             } else if (playbackState == Player.STATE_ENDED)
@@ -667,6 +667,8 @@ class AudioService : Service() {
 
             prevState = PlaybackState.STATE_PAUSED;
         }
+
+        startForeground(notificationId, generateNotification());
 
         return START_NOT_STICKY;
     }

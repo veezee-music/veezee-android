@@ -126,7 +126,7 @@ class BrowseHorizontalListAdapter(private val context: Context, private val home
                 holder.title.text = header?.title;
                 holder.note.text = header?.type?.toUpperCase();
 
-                if(header?.artist != null ) {
+                if (header?.artist != null) {
                     holder.artist.visibility = View.VISIBLE;
                     holder.artist.text = header.artist?.name;
                 } else {
@@ -161,17 +161,20 @@ class BrowseHorizontalListAdapter(private val context: Context, private val home
                     } else
                         controller.start(index = position);
 
-                    (context as HomePageActivity).openBottomPlayer();
+                    val i = Intent(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE)
+                    i.putExtra("open", true);
+                    context.sendBroadcast(i);
+//                    (context as HomePageActivity).openBottomPlayer();
                 };
 
                 holder.container.setOnLongClickListener {
 
                     val view = LayoutInflater.from(context).inflate(R.layout.dialog_track_menu, null);
 
-                    if(Constants.GUEST_MODE)
+                    if (Constants.GUEST_MODE)
                         view?.findViewById<Button>(R.id.dialog_menu_add)?.visibility = View.GONE;
 
-                    if(track.image == null)
+                    if (track.image == null)
                         track.image = track.album?.image;
 
                     TrackMenu().with(context)

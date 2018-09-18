@@ -62,7 +62,10 @@ class AlbumVerticalListAdapter(var album: Album, var context: Context) : Recycle
                 } else
                     controller.start(index =  position);
 
-                (context as AlbumActivity).openBottomPlayer();
+                val i = Intent(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE)
+                i.putExtra("open", true);
+                context.sendBroadcast(i);
+//                (context as AlbumActivity).openBottomPlayer();
             };
 
             holder.container.setOnLongClickListener {

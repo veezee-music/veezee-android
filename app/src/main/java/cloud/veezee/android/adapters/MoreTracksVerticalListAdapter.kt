@@ -159,7 +159,10 @@ class MoreTracksVerticalListAdapter(val context: Context, private val list: Arra
                     } else
                         controller.start(index = position);
 
-                    (context as AlbumsTrackListActivity).openBottomPlayer();
+                    val i = Intent(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE)
+                    i.putExtra("open", true);
+                    context.sendBroadcast(i);
+//                    (context as AlbumsTrackListActivity).openBottomPlayer();
                 };
 
             } else if (item is  Album) {

@@ -161,14 +161,17 @@ class SearchVerticalListAdapter(val context: Context, private val searchItems: A
                     } else
                         controller.start(index = clearTrackPosition);
 
-                    (context as HomePageActivity).openBottomPlayer();
+                    val i = Intent(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE)
+                    i.putExtra("open", true);
+                    context.sendBroadcast(i);
+//                    (context as HomePageActivity).openBottomPlayer();
                 };
 
                 holder.container.setOnLongClickListener {
 
                     val view = LayoutInflater.from(context).inflate(R.layout.dialog_track_menu, null);
 
-                    if(Constants.GUEST_MODE)
+                    if (Constants.GUEST_MODE)
                         view?.findViewById<Button>(R.id.dialog_menu_add)?.visibility = View.GONE;
 
                     TrackMenu().with(context)

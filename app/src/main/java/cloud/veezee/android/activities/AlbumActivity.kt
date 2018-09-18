@@ -2,6 +2,7 @@ package cloud.veezee.android.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,6 +15,7 @@ import cloud.veezee.android.R
 import cloud.veezee.android.adapters.AlbumVerticalListAdapter
 import cloud.veezee.android.application.GlideApp
 import cloud.veezee.android.models.Album
+import cloud.veezee.android.utils.AudioPlayer
 import cloud.veezee.android.utils.PlayListFactory
 import kotlinx.android.synthetic.main.activity_album.*
 import kotlinx.android.synthetic.main.activity_album_content.*
@@ -75,13 +77,19 @@ class AlbumActivity : BaseActivity() {
     fun play(view: View) {
         val playListFactory = PlayListFactory(context);
         controller?.start(playListFactory.album(album), 0);
-        openBottomPlayer();
+//        openBottomPlayer();
+        val i = Intent(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE)
+        i.putExtra("open", true);
+        sendBroadcast(i);
     }
 
     fun shuffle(view: View) {
         val playListFactory = PlayListFactory(context);
         controller?.start(playListFactory.shuffle(playListFactory.album(album)), 0);
-        openBottomPlayer();
+
+        val i = Intent(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE)
+        i.putExtra("open", true);
+        sendBroadcast(i);
     }
 }
 
