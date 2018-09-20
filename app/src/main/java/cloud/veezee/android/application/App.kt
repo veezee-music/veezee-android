@@ -28,8 +28,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate();
 
-        Log.i("Token", userToken(this));
-
         try {
 
             App.setting = Setting.getSetting(this);

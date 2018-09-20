@@ -10,7 +10,6 @@ class SettingModel(val viewType: ViewType) {
     enum class ItemType {
         THEME,
         COLORED_PLAYER,
-        MEMORY_OPTIMIZATION,
         OFFLINE_ACCESS
     }
 

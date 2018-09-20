@@ -71,22 +71,22 @@ class SettingActivity : BaseActivity() {
         return models;
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater;
-        inflater.inflate(R.menu.setting_menu, menu);
-
-        return true;
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val id = item?.itemId;
-
-        when (id) {
-            R.id.reset_default -> {
-                Setting.resetSetting(context);
-            }
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        val inflater = menuInflater;
+//        inflater.inflate(R.menu.setting_menu, menu);
+//
+//        return true;
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+//        val id = item?.itemId;
+//
+//        when (id) {
+//            R.id.reset_default -> {
+//                Setting.resetSetting(context);
+//            }
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 }

@@ -383,7 +383,7 @@ class AudioService : Service() {
     }
 
     private fun shuffle() {
-        player!!.shuffleModeEnabled = !player!!.shuffleModeEnabled;
+        player?.shuffleModeEnabled = !player!!.shuffleModeEnabled;
     }
 
     private fun repeat() {

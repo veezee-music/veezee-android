@@ -13,13 +13,18 @@ import android.widget.TextView
 import com.google.gson.Gson
 import cloud.veezee.android.R
 import cloud.veezee.android.adapters.AlbumVerticalListAdapter
+import cloud.veezee.android.api.API
+import cloud.veezee.android.api.album
+import cloud.veezee.android.api.utils.interfaces.HttpRequestListeners
 import cloud.veezee.android.application.GlideApp
 import cloud.veezee.android.models.Album
 import cloud.veezee.android.utils.AudioPlayer
 import cloud.veezee.android.utils.PlayListFactory
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_album.*
 import kotlinx.android.synthetic.main.activity_album_content.*
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
+import org.json.JSONObject
 
 class AlbumActivity : BaseActivity() {
 
@@ -34,7 +39,6 @@ class AlbumActivity : BaseActivity() {
     private var trackAdapter: AlbumVerticalListAdapter? = null
     private var album: Album? = null;
 
-    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_album);
@@ -45,13 +49,15 @@ class AlbumActivity : BaseActivity() {
         root = album_root;
 
         val albumJson = intent.extras.getString("album");
+
         album = Gson().fromJson(albumJson, Album::class.java);
+
+
 
         requestPlayer();
         prepareComponents();
         initializeList();
     }
-
 
     private fun prepareComponents() {
         list = album_list;
@@ -67,6 +73,23 @@ class AlbumActivity : BaseActivity() {
     }
 
     private fun initializeList() {
+        if(album?.tracks == null || album?.tracks!!.count() <= 0) {
+            API.Get.album(this, album?.id ?: "", object : HttpRequestListeners.StringResponseListener {
+                override fun response(response: String?) {
+                    album = Gson().fromJson(response, object : TypeToken<Album>() {}.type);
+
+                    prepareComponents();
+                    initializeList();
+                }
+
+                override fun error(error: JSONObject?) {
+
+                }
+            });
+
+            return;
+        }
+
         trackAdapter = AlbumVerticalListAdapter(album!!, context);
         list?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         list?.adapter = trackAdapter;
@@ -77,7 +100,7 @@ class AlbumActivity : BaseActivity() {
     fun play(view: View) {
         val playListFactory = PlayListFactory(context);
         controller?.start(playListFactory.album(album), 0);
-//        openBottomPlayer();
+
         val i = Intent(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE)
         i.putExtra("open", true);
         sendBroadcast(i);

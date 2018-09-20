@@ -28,8 +28,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@android:color/transparent"
-        android:paddingTop="4dp"
-        android:paddingBottom="3dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_player_guideline"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -40,7 +38,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
-            android:padding="6dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:src="@drawable/ic_close" />
 
         <cloud.veezee.android.externalComponentsAndLibs.SquareImageViewDependOnHeight
@@ -48,16 +47,17 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_toRightOf="@+id/bottom_player_close"
-            android:background="@drawable/image_border_radius"
             android:scaleType="fitXY" />
 
         <LinearLayout
             android:id="@+id/bottom_player_title_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@+id/bottom_player_artwork"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp">
 
             <TextView
                 android:id="@+id/bottom_player_title"
@@ -89,7 +89,8 @@
             android:clickable="true"
             android:focusable="true"
             android:onClick="audioPlay"
-            android:padding="6dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:src="@drawable/ic_play_primary_text"
             android:visibility="gone" />
 
@@ -102,7 +103,8 @@
             android:clickable="true"
             android:focusable="true"
             android:onClick="audioPause"
-            android:padding="6dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:src="@drawable/ic_pause_primary_text" />
 
     </RelativeLayout>
@@ -211,9 +213,8 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:maxWidth="270dp"
-                android:text="title"
                 android:textColor="?attr/primaryText"
-                android:textSize="17sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -229,7 +230,7 @@
                 android:gravity="center"
                 android:maxWidth="190dp"
                 android:singleLine="true"
-                android:text="artist"
+                android:textSize="17sp"
                 android:textColor="?attr/secondaryText"
                 app:layout_constraintLeft_toLeftOf="@+id/player_title"
                 app:layout_constraintRight_toRightOf="@+id/player_title"
@@ -275,8 +276,8 @@
 
             <ImageView
                 android:id="@+id/controller_play"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:onClick="audioPlay"
@@ -289,8 +290,8 @@
 
             <ImageView
                 android:id="@+id/controller_pause"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:onClick="audioPause"

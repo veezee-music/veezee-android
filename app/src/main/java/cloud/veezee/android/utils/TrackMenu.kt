@@ -34,6 +34,7 @@ class TrackMenu {
     private var title: TextView? = null;
     private var albumTitle: TextView? = null;
     private var artist: TextView? = null;
+    private var dialogMenuChevron: ImageView? = null;
 
     private lateinit var dialog: AlertDialog.Builder;
     private lateinit var d: AlertDialog;
@@ -109,12 +110,6 @@ class TrackMenu {
             }
         });
 
-        artwork?.setOnClickListener {
-            if(track.album != null) {
-                //showAlbumPage(track.album!!);
-            }
-        }
-
         return this;
     }
 
@@ -137,6 +132,7 @@ class TrackMenu {
         title = view.findViewById(R.id.dialog_menu_title);
         albumTitle = view.findViewById(R.id.dialog_menu_album_title);
         artist = view.findViewById(R.id.dialog_menu_artist);
+        dialogMenuChevron = view.findViewById(R.id.dialog_menu_chevron);
 
         add?.setOnClickListener {
             listener.addClickListener(d);
@@ -144,6 +140,18 @@ class TrackMenu {
 
         cancel?.setOnClickListener {
             listener.cancelCLickListener(d);
+        }
+
+        artwork?.setOnClickListener {
+            if(track.album != null) {
+                showAlbumPage(track.album!!);
+            }
+        }
+
+        dialogMenuChevron?.setOnClickListener {
+            if(track.album != null) {
+                showAlbumPage(track.album!!);
+            }
         }
 
         artwork?.clipToOutline = true;

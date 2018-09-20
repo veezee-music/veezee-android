@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_home_page_content.*
 import kotlinx.android.synthetic.main.content_player.*
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.graphics.drawable.DrawableCompat
+import android.support.v4.widget.ImageViewCompat
 import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.*
@@ -348,7 +349,6 @@ open class BaseActivity : AppCompatActivity() {
 
         close?.setOnClickListener {
             controller?.destroyPlayer();
-            //closeBottomPlayer();
         }
 
         panel_child.setOnClickListener(null);
@@ -375,19 +375,31 @@ open class BaseActivity : AppCompatActivity() {
 
         var color = 0;
 
-        val shuffleXRotation = shuffle?.rotationX;
-        if (shuffleXRotation == 0f) {
+        if (shuffle?.rotationX == 0f) {
             color = android.graphics.Color.parseColor(controller?.playableItem?.colors?.primaryColor);
             shuffle?.animate()?.rotationX(180f)?.start();
         } else {
             color = android.graphics.Color.parseColor(controller?.playableItem?.colors?.accentColor);
-            shuffle?.animate()?.rotationX(0f)?.start(); }
+            shuffle?.animate()?.rotationX(0f)?.start();
+        }
 
         DrawableCompat.setTint(shuffle?.drawable!!, color);
     }
 
     fun audioRepeat(view: View) {
         controller?.repeat();
+
+        var color = 0;
+
+        if (repeat?.rotation == 0f) {
+            color = android.graphics.Color.parseColor(controller?.playableItem?.colors?.primaryColor);
+            repeat?.animate()?.rotation(360f)?.start();
+        } else {
+            color = android.graphics.Color.parseColor(controller?.playableItem?.colors?.accentColor);
+            repeat?.animate()?.rotation(0f)?.start();
+        }
+
+        DrawableCompat.setTint(repeat?.drawable!!, color);
     }
 
     private fun panelCompletelyExpanded() {

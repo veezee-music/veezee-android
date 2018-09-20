@@ -8,17 +8,17 @@ class HttpRequestListeners {
 
         fun response(response: JSONObject);
 
-        fun headers(json: JSONObject);
+        fun headers(json: JSONObject) {};
 
-        fun error(er: JSONObject);
+        fun error(er: JSONObject) {};
     }
 
     interface StringResponseListener {
 
         fun response(response: String?);
 
-        fun headers(json: JSONObject);
+        fun headers(json: JSONObject) {};
 
-        fun error(error: JSONObject?)
+        fun error(error: JSONObject?) {};
     }
 }
