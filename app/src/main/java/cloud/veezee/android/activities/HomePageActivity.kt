@@ -21,6 +21,7 @@ import cloud.veezee.android.utils.hideKeyboard
 import cloud.veezee.android.utils.mkDirs
 import kotlinx.android.synthetic.main.activity_home_page.*
 import android.support.design.widget.TabLayout
+import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.TextView
 import cloud.veezee.android.Constants
@@ -217,8 +218,8 @@ class HomePageActivity : BaseActivity() {
     }
 
     private fun makeRequiredFiles() {
-        mkDirs(App.setting?.directory + "/cache/images");
-        mkDirs(App.setting?.directory + "/cache/audio");
+        mkDirs(Constants.DIRECTORY + "/cache/images");
+        mkDirs(Constants.DIRECTORY + "/cache/audio");
     }
 
 //    private fun permissions() {

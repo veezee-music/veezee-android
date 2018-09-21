@@ -40,8 +40,8 @@ class UserManager {
 
         private fun getUser(context: Context): UserManager {
 
-            return if (SharedPreferencesHelper.exist(context, NAME)) {
-                val serializeAccount = SharedPreferencesHelper.get(context, NAME);
+            return if (SharedPreferencesHelper(context).exist(NAME)) {
+                val serializeAccount = SharedPreferencesHelper(context).get(NAME);
                 Gson().fromJson(serializeAccount, UserManager::class.java)
             } else {
                 UserManager();
@@ -49,8 +49,8 @@ class UserManager {
         }
 
         fun remove(context: Context): Boolean {
-            if (SharedPreferencesHelper.exist(context, NAME))
-                return SharedPreferencesHelper.delete(context, NAME);
+            if (SharedPreferencesHelper(context).exist(NAME))
+                return SharedPreferencesHelper(context).delete(NAME);
             return false;
         }
 
@@ -75,7 +75,7 @@ class UserManager {
     fun set(context: Context): Boolean {
 
         userLogin = true;
-        userLogin = SharedPreferencesHelper.save(context, NAME, accountToJson());
+        userLogin = SharedPreferencesHelper(context).save(NAME, accountToJson());
 
         return userLogin;
     };

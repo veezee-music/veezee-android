@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
@@ -16,12 +16,12 @@
     <attr name="secondaryText" format="reference|color" />
 
     <style name="PurpleDark" parent="AppTheme">
-        <!-- Default theme here. -->
         <item name="colorPrimary">@color/purple_dark_primary</item>
         <item name="colorPrimaryDark">@color/purple_dark_primary_dark</item>
         <item name="colorAccent">@color/purple_dark_accent</item>
         <item name="primaryText">@color/purple_dark_primary_text</item>
         <item name="secondaryText">@color/purple_dark_secondary_text</item>
+        <item name="android:navigationBarColor">@color/purple_dark_primary</item>
     </style>
 
     <style name="Black" parent="AppTheme">
@@ -30,6 +30,7 @@
         <item name="colorAccent">@color/black_accent</item>
         <item name="primaryText">@color/black_primary_text</item>
         <item name="secondaryText">@color/black_secondary_text</item>
+        <item name="android:navigationBarColor">@color/black_primary</item>
     </style>
 
     <style name="White" parent="AppTheme">

@@ -10,7 +10,6 @@ import android.support.design.widget.TextInputEditText
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.CardView
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -103,7 +102,7 @@ class LoginActivity : AppCompatActivity() {
         override fun onAnimationEnd(animation: Animation?) {
             if(!Constants.GUEST_MODE) {
                 if (user!!.isLoggedIn) {
-                    if (App.offlineMode) {
+                    if (!isOnline(context)) {
                         readyToLaunchOfflineMode();
                     } else {
                         validateLogin();
@@ -126,7 +125,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_content);
 
-        App.offlineMode = !isOnline(context);
+        //Constants.OFFLINE_ACCESS = !isOnline(context);
 
         user = UserManager.get(context);
         initComponents();
@@ -175,7 +174,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun readyToLaunchOfflineMode() {
-        if (!user!!.isTokenExpired && App.setting!!.offlineAccess) {
+        if (!user!!.isTokenExpired && !isOnline(context)) {
             redirectToMainPage(800);
         } else {
             logout();
@@ -538,7 +537,7 @@ class LoginActivity : AppCompatActivity() {
                 validateLogin();
             }
             offlineButtonId -> {
-                App.offlineMode = true;
+                Constants.OFFLINE_ACCESS = true;
                 readyToLaunchOfflineMode();
             }
         }

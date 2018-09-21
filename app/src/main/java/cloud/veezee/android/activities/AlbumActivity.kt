@@ -6,10 +6,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import cloud.veezee.android.Constants
 import com.google.gson.Gson
 import cloud.veezee.android.R
 import cloud.veezee.android.adapters.AlbumVerticalListAdapter
@@ -40,7 +42,7 @@ class AlbumActivity : BaseActivity() {
     private var album: Album? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
         setSupportActionBar(album_toolbar);
         navigationIcon(album_toolbar);
@@ -51,8 +53,6 @@ class AlbumActivity : BaseActivity() {
         val albumJson = intent.extras.getString("album");
 
         album = Gson().fromJson(albumJson, Album::class.java);
-
-
 
         requestPlayer();
         prepareComponents();
@@ -94,14 +94,14 @@ class AlbumActivity : BaseActivity() {
         list?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         list?.adapter = trackAdapter;
 
-        OverScrollDecoratorHelper.setUpOverScroll(list, OverScrollDecoratorHelper.ORIENTATION_VERTICAL)
+        OverScrollDecoratorHelper.setUpOverScroll(list, OverScrollDecoratorHelper.ORIENTATION_VERTICAL);
     }
 
     fun play(view: View) {
         val playListFactory = PlayListFactory(context);
         controller?.start(playListFactory.album(album), 0);
 
-        val i = Intent(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE)
+        val i = Intent(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE);
         i.putExtra("open", true);
         sendBroadcast(i);
     }
@@ -110,7 +110,7 @@ class AlbumActivity : BaseActivity() {
         val playListFactory = PlayListFactory(context);
         controller?.start(playListFactory.shuffle(playListFactory.album(album)), 0);
 
-        val i = Intent(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE)
+        val i = Intent(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE);
         i.putExtra("open", true);
         sendBroadcast(i);
     }

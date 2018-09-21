@@ -206,48 +206,48 @@ class BrowseHorizontalListAdapter(private val context: Context, private val home
         GlideApp.with(context).load(imageUrl).thumbnail(0.1f).into(artWork!!);
     }
 
-    inner class HeaderViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var container: CardView = itemView?.findViewById(R.id.header_item_container)!!;
-        val title: TextView = itemView?.findViewById(R.id.header_item_title)!!;
-        val note: TextView = itemView?.findViewById(R.id.header_item_note)!!;
-        val artWork: ImageView = itemView?.findViewById(R.id.header_item_cover)!!;
-        val artist: TextView = itemView?.findViewById(R.id.header_item_artist)!!;
-
-        init {
-            artWork.clipToOutline = true;
-        }
-    }
-
-    inner class AlbumViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-
-        var container: CardView = itemView?.findViewById(R.id.album_item_container)!!;
-        val title: TextView = itemView?.findViewById(R.id.album_item_title)!!;
-        val artWork: ImageView = itemView?.findViewById(R.id.album_item_cover)!!;
-        val artist: TextView = itemView?.findViewById(R.id.album_item_artist)!!;
+        var container: CardView = itemView.findViewById(R.id.header_item_container)!!;
+        val title: TextView = itemView.findViewById(R.id.header_item_title)!!;
+        val note: TextView = itemView.findViewById(R.id.header_item_note)!!;
+        val artWork: ImageView = itemView.findViewById(R.id.header_item_cover)!!;
+        val artist: TextView = itemView.findViewById(R.id.header_item_artist)!!;
 
         init {
             artWork.clipToOutline = true;
         }
     }
 
-    inner class GenreViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    inner class AlbumViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var container: CardView = itemView?.findViewById(R.id.genre_item_container)!!;
-        val title: TextView = itemView?.findViewById(R.id.genre_item_title)!!;
-        val artWork: ImageView = itemView?.findViewById(R.id.genre_item_cover)!!;
+        var container: CardView = itemView.findViewById(R.id.album_item_container)!!;
+        val title: TextView = itemView.findViewById(R.id.album_item_title)!!;
+        val artWork: ImageView = itemView.findViewById(R.id.album_item_cover)!!;
+        val artist: TextView = itemView.findViewById(R.id.album_item_artist)!!;
 
         init {
             artWork.clipToOutline = true;
         }
     }
 
-    inner class TrackViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    inner class GenreViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var container: CardView = itemView?.findViewById(R.id.track_item_home_container)!!;
-        val title: TextView = itemView?.findViewById(R.id.track_item_title)!!;
-        val artwork: ImageView = itemView?.findViewById(R.id.track_item_cover)!!;
-        val artist: TextView = itemView?.findViewById(R.id.track_item_artist)!!;
+        var container: CardView = itemView.findViewById(R.id.genre_item_container)!!;
+        val title: TextView = itemView.findViewById(R.id.genre_item_title)!!;
+        val artWork: ImageView = itemView.findViewById(R.id.genre_item_cover)!!;
+
+        init {
+            artWork.clipToOutline = true;
+        }
+    }
+
+    inner class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        var container: CardView = itemView.findViewById(R.id.track_item_home_container)!!;
+        val title: TextView = itemView.findViewById(R.id.track_item_title)!!;
+        val artwork: ImageView = itemView.findViewById(R.id.track_item_cover)!!;
+        val artist: TextView = itemView.findViewById(R.id.track_item_artist)!!;
 
         init {
             artwork.clipToOutline = true;

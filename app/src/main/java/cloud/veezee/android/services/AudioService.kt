@@ -19,6 +19,7 @@ import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
 import android.util.Patterns
+import cloud.veezee.android.Constants
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import cloud.veezee.android.models.PlayableItem
@@ -114,11 +115,11 @@ class AudioService : Service() {
             val url = playableItem?.fileName;
 
             val proxy = VeezeeCache(context).proxy;
-            if (proxy!!.isCached(playableItem?.id) && Patterns.WEB_URL.matcher(url).matches() && App.setting!!.offlineAccess) {
+            if (proxy!!.isCached(playableItem?.id) && Patterns.WEB_URL.matcher(url).matches() && Constants.OFFLINE_ACCESS) {
 
-                val audioCacheLocation = File(App.setting?.directory, "cache/audio/${playableItem?.id}").toString();
-                val imageCacheLocation = File(App.setting?.directory, "cache/images/${playableItem?.id}");
-                val albumImageCacheLocation = File(App.setting?.directory, "cache/images/${playableItem?.album?.id}");
+                val audioCacheLocation = File(Constants.DIRECTORY, "cache/audio/${playableItem?.id}").toString();
+                val imageCacheLocation = File(Constants.DIRECTORY, "cache/images/${playableItem?.id}");
+                val albumImageCacheLocation = File(Constants.DIRECTORY, "cache/images/${playableItem?.album?.id}");
 
                 try {
                     val os = FileOutputStream(imageCacheLocation);
@@ -148,7 +149,6 @@ class AudioService : Service() {
     }
 
     private val mSessionCallBack = object : MediaSessionCompat.Callback() {
-
         override fun onPlay() {
             super.onPlay();
             startPlayer();
@@ -465,7 +465,7 @@ class AudioService : Service() {
 
     private fun getCacheDataSourceFactory(dataSourceFactory: DefaultHttpDataSourceFactory): CacheDataSourceFactory {
 
-        val cache = SimpleCache(File(App.setting?.directory, " cache"), LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE));
+        val cache = SimpleCache(File(Constants.DIRECTORY, " cache"), LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE));
         val cacheFlags = CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR or CacheDataSource.FLAG_BLOCK_ON_CACHE;
 
         return CacheDataSourceFactory(cache, dataSourceFactory, cacheFlags, MAX_CACHE_SIZE);

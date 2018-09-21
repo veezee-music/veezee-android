@@ -11,16 +11,15 @@
         android:id="@+id/homePage_app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="0dp"
-        app:elevation="0dp"
         android:paddingTop="24dp"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:elevation="0dp"
+        app:elevation="0dp">
 
         <FrameLayout
             android:id="@+id/homePage_toolbar_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="0dp">
+            android:layout_height="wrap_content">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -33,7 +32,7 @@
                 app:titleMarginStart="0dp"
                 app:contentInsetStart="0dp"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                app:layout_scrollFlags="scroll|enterAlways" />
 
                 <ImageView
                     android:id="@+id/logotype"

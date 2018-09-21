@@ -113,11 +113,11 @@ class AlbumVerticalListAdapter(var album: Album, var context: Context) : Recycle
     }
 
     //ViewHolders
-    inner class MainRowViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    inner class MainRowViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val container: CardView = itemView?.findViewById(R.id.album_track_container)!!;
-        val number: TextView = itemView?.findViewById(R.id.album_track_number)!!;
-        val title: TextView = itemView?.findViewById(R.id.album_track_title)!!;
-        val artist: TextView = itemView?.findViewById(R.id.album_track_artist)!!;
+        val container: CardView = itemView.findViewById(R.id.album_track_container)!!;
+        val number: TextView = itemView.findViewById(R.id.album_track_number)!!;
+        val title: TextView = itemView.findViewById(R.id.album_track_title)!!;
+        val artist: TextView = itemView.findViewById(R.id.album_track_artist)!!;
     }
 }

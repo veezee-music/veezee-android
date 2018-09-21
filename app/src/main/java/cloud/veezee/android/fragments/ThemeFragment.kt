@@ -12,13 +12,13 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import cloud.veezee.android.Constants
 import cloud.veezee.android.application.App
 import cloud.veezee.android.models.SettingModel
-import cloud.veezee.android.utils.Setting
 import cloud.veezee.android.R
+import cloud.veezee.android.Theme
 
 class ThemeFragment : BottomSheetDialogFragment() {
-
     private val TAG = "ThemeFragment";
 
     private var bottomSheet: BottomSheetBehavior<LinearLayout>? = null;
@@ -30,24 +30,20 @@ class ThemeFragment : BottomSheetDialogFragment() {
         }
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN)
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 dismiss();
+            }
         }
     }
 
-    private fun setTheme(theme: Setting.Theme) {
-        val s2 = App.setting;
-
-        s2?.theme = theme;
-        s2?.save(context);
+    private fun setTheme(theme: Theme) {
+        Constants.THEME = theme;
 
         recreateActivities();
     }
 
-
     private fun recreateActivities() {
-
-        val recreateRequest: Intent = Intent(Setting.SETTING_NOTIFICATION);
+        val recreateRequest: Intent = Intent(Constants.SETTINGS_CHANGED_NOTIFICATION_ID);
         recreateRequest.flags = SettingModel.THEME_CHANGED;
         LocalBroadcastManager.getInstance(context!!).sendBroadcast(recreateRequest);
     }
@@ -64,24 +60,22 @@ class ThemeFragment : BottomSheetDialogFragment() {
 
         radioBlack.isChecked = true;
 
-        val theme: Setting.Theme = App.setting!!.theme!!;
-
-        when(theme) {
-            Setting.Theme.WHITE -> radioWhite.isChecked = true;
-            Setting.Theme.BLACK -> radioBlack.isChecked = true;
-            Setting.Theme.PURPLE_DARK -> radioPurpleDark.isChecked = true;
+        when(Constants.THEME) {
+            Theme.WHITE -> radioWhite.isChecked = true;
+            Theme.BLACK -> radioBlack.isChecked = true;
+            Theme.PURPLE_DARK -> radioPurpleDark.isChecked = true;
         }
 
         radioGroup?.setOnCheckedChangeListener { _, checkedId ->
             when(checkedId) {
                 radioBlack.id -> {
-                    setTheme(Setting.Theme.BLACK);
+                    setTheme(Theme.BLACK);
                 }
                 radioPurpleDark.id -> {
-                    setTheme(Setting.Theme.PURPLE_DARK);
+                    setTheme(Theme.PURPLE_DARK);
                 }
                 radioWhite.id -> {
-                    setTheme(Setting.Theme.WHITE);
+                    setTheme(Theme.WHITE);
                 }
             }
         }

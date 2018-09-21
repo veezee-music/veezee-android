@@ -9,10 +9,10 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="0dp"
-        app:elevation="0dp"
         android:paddingTop="24dp"
-        android:theme="@style/Default.AppBarOverlay">
+        android:theme="@style/Default.AppBarOverlay"
+        android:elevation="0dp"
+        app:elevation="0dp">
 
         <FrameLayout
             android:layout_width="match_parent"

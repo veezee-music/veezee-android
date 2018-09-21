@@ -11,7 +11,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cloud.veezee.android.activities.BaseActivity">
 
-
     <ImageView
         android:id="@+id/player_blur_background"
         android:layout_width="0dp"
@@ -56,8 +55,8 @@
             android:gravity="center_vertical"
             android:layout_toRightOf="@+id/bottom_player_artwork"
             android:orientation="vertical"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp">
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
             <TextView
                 android:id="@+id/bottom_player_title"
@@ -65,7 +64,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Title"
                 android:textColor="?attr/primaryText"
                 android:textSize="@dimen/title" />
 
@@ -75,7 +73,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Artist"
                 android:textColor="?attr/secondaryText"
                 android:textSize="@dimen/artist_name" />
         </LinearLayout>

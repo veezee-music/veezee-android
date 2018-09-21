@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import cloud.veezee.android.adapters.SettingVerticalListAdapter
 import cloud.veezee.android.models.SettingModel
-import cloud.veezee.android.utils.Setting
 import cloud.veezee.android.R
 import kotlinx.android.synthetic.main.activity_setting.*
 import kotlinx.android.synthetic.main.activity_setting_content.*

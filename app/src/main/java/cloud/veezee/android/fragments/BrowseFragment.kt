@@ -3,12 +3,16 @@ package cloud.veezee.android.fragments
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.*
 import cloud.veezee.android.models.HomePageItem
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 import android.widget.*
+import cloud.veezee.android.Constants
 import cloud.veezee.android.api.utils.interfaces.HttpRequestListeners
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -16,16 +20,12 @@ import cloud.veezee.android.activities.SettingActivity
 import cloud.veezee.android.adapters.BrowseVerticalListAdapter
 import cloud.veezee.android.api.API
 import cloud.veezee.android.api.home
-import cloud.veezee.android.application.App
 import cloud.veezee.android.externalComponentsAndLibs.HidingScrollListener
 import cloud.veezee.android.externalComponentsAndLibs.NestedScrollingParentRecyclerView
-import cloud.veezee.android.utils.contentReadyToShow
-import cloud.veezee.android.utils.VeezeeCache
 import cloud.veezee.android.utils.interfaces.OfflinePlayListResponseListener
 import cloud.veezee.android.models.PlayableItem
-import cloud.veezee.android.utils.Couchbase
-import cloud.veezee.android.utils.PlayListFactory
 import cloud.veezee.android.R
+import cloud.veezee.android.utils.*
 import kotlinx.android.synthetic.main.activity_home_page.*
 import org.json.JSONObject
 
@@ -110,18 +110,20 @@ class BrowseFragment : Fragment() {
         adapter = BrowseVerticalListAdapter(context!!, homePageItems);
         initializeList();
 
-        if (!App.offlineMode) {
-
+        if (isOnline(context)) {
             val contentJson = readContentFromCache();
             if(contentJson != null)
                 updateList(contentJson);
 
             API.Lists.home(context!!, volleyResponseListener);
-
         } else {
-
             val playList: ArrayList<PlayableItem> = Couchbase.getInstance(context)?.getAll()!!;
             PlayListFactory(context!!).offlinePlayList(playList, offlinePlayListListener);
+        }
+
+        val appbarLayout: android.support.design.widget.AppBarLayout? = activity?.findViewById(R.id.homePage_app_bar_layout);
+        if(appbarLayout != null) {
+            browseList?.addOnScrollListener(RecyclerViewElevationAwareScrollListener(appbarLayout));
         }
 
         return view;
@@ -134,12 +136,11 @@ class BrowseFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
         val id = item?.itemId;
 
         when (id) {
             R.id.setting -> {
-                val settingActivity: Intent = Intent(context, SettingActivity::class.java);
+                val settingActivity = Intent(context, SettingActivity::class.java);
                 startActivity(settingActivity);
             }
         }

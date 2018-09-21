@@ -3,6 +3,7 @@ package cloud.veezee.android.utils;
 import android.graphics.Rect;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 
 
 public class StatusBarHelper {
@@ -30,6 +31,7 @@ public class StatusBarHelper {
     public static Integer getHeight(Window window) {
         Rect rect = new Rect();
         window.getDecorView().getWindowVisibleDisplayFrame(rect);
+
         return rect.top;
     }
 
@@ -49,5 +51,13 @@ public class StatusBarHelper {
         int flags = view.getSystemUiVisibility();
         flags |= View.SYSTEM_UI_FLAG_FULLSCREEN;
         view.setSystemUiVisibility(flags);
+    }
+
+    public static void toggleStatusBar(Window window) {
+        View view = window.getDecorView();
+
+        int uiOptions = view.getSystemUiVisibility();
+        uiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        view.setSystemUiVisibility(uiOptions);
     }
 }

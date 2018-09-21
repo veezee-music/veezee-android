@@ -230,19 +230,19 @@ class SearchVerticalListAdapter(val context: Context, private val searchItems: A
         }
     }
 
-    inner class TrackViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        var title: TextView = itemView?.findViewById(R.id.search_track_title)!!;
-        var artist: TextView = itemView?.findViewById(R.id.search_track_artist)!!;
-        var artWork: ImageView = itemView?.findViewById(R.id.search_track_artWork)!!;
-        var container: ConstraintLayout = itemView?.findViewById(R.id.track_item_search_container)!!;
+    inner class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var title: TextView = itemView.findViewById(R.id.search_track_title)!!;
+        var artist: TextView = itemView.findViewById(R.id.search_track_artist)!!;
+        var artWork: ImageView = itemView.findViewById(R.id.search_track_artWork)!!;
+        var container: ConstraintLayout = itemView.findViewById(R.id.track_item_search_container)!!;
 
         init {
             artWork.clipToOutline = true;
         }
     }
 
-    inner class HeaderViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        var title: TextView = itemView?.findViewById(cloud.veezee.android.R.id.search_header_title)!!;
+    inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var title: TextView = itemView.findViewById(cloud.veezee.android.R.id.search_header_title)!!;
     }
 
 }

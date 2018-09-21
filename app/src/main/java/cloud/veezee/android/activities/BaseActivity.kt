@@ -9,9 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
-import android.os.AsyncTask
-import android.os.Bundle
-import android.os.CountDownTimer
+import android.os.*
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.ContextCompat
@@ -25,11 +23,12 @@ import kotlinx.android.synthetic.main.activity_home_page_content.*
 import kotlinx.android.synthetic.main.content_player.*
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.widget.ImageViewCompat
 import android.util.Log
+import android.util.TypedValue
 import android.view.animation.AnimationUtils
 import android.widget.*
 import cloud.veezee.android.Constants
+import cloud.veezee.android.Theme
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.exoplayer2.Player
@@ -45,6 +44,7 @@ import cloud.veezee.android.models.Color
 import cloud.veezee.android.models.SettingModel
 import cloud.veezee.android.services.AudioService
 import cloud.veezee.android.utils.*
+import cloud.veezee.android.utils.UserManager
 import org.json.JSONObject
 
 open class BaseActivity : AppCompatActivity() {
@@ -82,7 +82,6 @@ open class BaseActivity : AppCompatActivity() {
     var myAppbarLayout: AppBarLayout? = null;
     lateinit var root: ConstraintLayout;
 
-
     private var google: GoogleSignInHelper? = null;
     private var prevPosition: Long = -1;
     private var isActivityVisible: Boolean = true;
@@ -100,13 +99,12 @@ open class BaseActivity : AppCompatActivity() {
             bottomPlayerArtwork?.setImageBitmap(resource);
             playerArtWork?.setImageBitmap(resource);
 
-            if (App.setting!!.coloredPlayer) {
+            if (Constants.COLORED_PLAYER) {
                 val task = SetBlurredArtWork();
                 task.execute(resource);
             }
         }
     }
-
 
     private val validateLoginResponseListener = object : HttpRequestListeners.JsonObjectResponseListener {
         override fun response(response: JSONObject) {
@@ -214,7 +212,6 @@ open class BaseActivity : AppCompatActivity() {
         private var canShowStatusBar = false;
 
         override fun onPanelSlide(panel: View?, slideOffset: Float) {
-
             playerArtWork?.visibility = View.VISIBLE;
             playerArtWork?.alpha = slideOffset;
 
@@ -227,8 +224,9 @@ open class BaseActivity : AppCompatActivity() {
                 panelCompletelyExpanded();
                 canShowStatusBar = true;
             } else {
-                if (canShowStatusBar)
+                if (canShowStatusBar) {
                     StatusBarHelper.showStatusBar(window);
+                }
             }
         }
 
@@ -245,7 +243,6 @@ open class BaseActivity : AppCompatActivity() {
     };
 
     private val onVolumeSeekChangeListener = object : SeekBar.OnSeekBarChangeListener {
-
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             audioManager?.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0)
         }
@@ -341,7 +338,7 @@ open class BaseActivity : AppCompatActivity() {
         playerVolume?.setOnSeekBarChangeListener(onVolumeSeekChangeListener);
         playerSeek?.setOnSeekBarChangeListener(onPlayerSeekChangeListener);
         slidingLayout?.addPanelSlideListener(panelSlidingListener);
-        bottomPlayerLayout?.setOnTouchListener(bottomPlayerTouch);
+        //bottomPlayerLayout?.setOnTouchListener(bottomPlayerTouch);
 
         bottomPlayerLayout?.setOnClickListener {
             expandPanel();
@@ -350,6 +347,14 @@ open class BaseActivity : AppCompatActivity() {
         close?.setOnClickListener {
             controller?.destroyPlayer();
         }
+
+//        playerArtWork?.setOnClickListener { _ ->
+//            StatusBarHelper.toggleStatusBar(window);
+//
+//            Handler().postDelayed({
+//                StatusBarHelper.hideStatusBar(window);
+//            }, 2500);
+//        }
 
         panel_child.setOnClickListener(null);
     };
@@ -482,12 +487,15 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun applyTheme(theme: Setting.Theme): Int {
+    private fun applyTheme(theme: Theme): Int {
         return when (theme) {
-            Setting.Theme.PURPLE_DARK -> R.style.PurpleDark
-            Setting.Theme.BLACK -> R.style.Black;
-            Setting.Theme.WHITE -> {
-                //StatusBarHelper.setLightStatusBar(window.decorView);
+            Theme.PURPLE_DARK -> {
+                R.style.PurpleDark
+            }
+            Theme.BLACK -> {
+                R.style.Black
+            };
+            Theme.WHITE -> {
                 R.style.White
             };
         }
@@ -514,8 +522,9 @@ open class BaseActivity : AppCompatActivity() {
         bottomPlayerArtwork?.setImageResource(R.drawable.placeholder);
         playerArtWork?.setImageResource(R.drawable.placeholder);
 
-        if (App.setting!!.coloredPlayer)
+        if (Constants.COLORED_PLAYER) {
             updateUIForColoredPlayer(playableItem?.colors);
+        }
 
         GlideApp.with(context)
                 .asBitmap()
@@ -598,23 +607,29 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState);
         title = "";
 
-        val setting = App.setting;
-        setTheme(applyTheme(setting?.theme!!));
+        loadPreferences();
+
+        setTheme(applyTheme(Constants.THEME));
 
         registerReceiver(bottomPlayerStateReceiver, IntentFilter(AudioPlayer.ACTION_CHANGE_BOTTOM_PLAYER_STATE));
-        LocalBroadcastManager.getInstance(context).registerReceiver(settingChangedReceiver, IntentFilter(Setting.SETTING_NOTIFICATION));
+        LocalBroadcastManager.getInstance(context).registerReceiver(settingChangedReceiver, IntentFilter(Constants.SETTINGS_CHANGED_NOTIFICATION_ID));
         LocalBroadcastManager.getInstance(context).registerReceiver(metaDataReceiver, IntentFilter(AudioPlayer.ACTION_META_DATA));
 
         if (now() > App.autoLoginSessionExpireDate && !Constants.GUEST_MODE)
             checkUserLogin();
     }
 
-    private fun checkUserLogin() {
+    fun loadPreferences() {
+        Constants.COLORED_PLAYER = SharedPreferencesHelper(this).getBoolean("COLORED_PLAYER", Constants.COLORED_PLAYER);
+        Constants.OFFLINE_ACCESS = SharedPreferencesHelper(this).getBoolean("OFFLINE_ACCESS", Constants.OFFLINE_ACCESS);
+        Constants.THEME = Theme.valueOf(SharedPreferencesHelper(this).getString("THEME", Constants.THEME.value));
+    }
 
+    private fun checkUserLogin() {
         val user = UserManager.get(context);
 
         if (user.isLoggedIn) {
-            if (!App.offlineMode) {
+            if (isOnline(context)) {
                 API.Account.validateLogin(context, userToken(context), validateLoginResponseListener);
             }
         } else {

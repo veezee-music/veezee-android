@@ -51,7 +51,7 @@ class MoreTracksVerticalListAdapter(val context: Context, private val list: Arra
             var lastVisibleItem = 0;
 
             recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy);
 
                     totalItemCount = layoutManager.itemCount;
@@ -188,11 +188,11 @@ class MoreTracksVerticalListAdapter(val context: Context, private val list: Arra
         }
     }
 
-    inner class MainItemViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        val container: CardView = itemView?.findViewById(R.id.album_item_container)!!;
-        val title: TextView = itemView?.findViewById(R.id.album_item_title)!!;
-        val artist: TextView = itemView?.findViewById(R.id.album_item_artist)!!;
-        val artwork: ImageView = itemView?.findViewById(R.id.album_item_cover)!!;
+    inner class MainItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val container: CardView = itemView.findViewById(R.id.album_item_container)!!;
+        val title: TextView = itemView.findViewById(R.id.album_item_title)!!;
+        val artist: TextView = itemView.findViewById(R.id.album_item_artist)!!;
+        val artwork: ImageView = itemView.findViewById(R.id.album_item_cover)!!;
 
         init {
             artwork.clipToOutline = true;

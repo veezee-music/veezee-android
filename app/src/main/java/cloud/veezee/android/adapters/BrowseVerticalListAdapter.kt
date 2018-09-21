@@ -9,21 +9,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import cloud.veezee.android.Constants
 import cloud.veezee.android.activities.AlbumsTrackListActivity
-import cloud.veezee.android.application.App
 import cloud.veezee.android.externalComponentsAndLibs.CenterZoomLayoutManager
 
 import cloud.veezee.android.models.HomePageItem
 import cloud.veezee.android.externalComponentsAndLibs.StartSnapHelper
 import cloud.veezee.android.R
-import cloud.veezee.android.R.layout.item_brows_horizontal_list
+import cloud.veezee.android.R.layout.item_browse_horizontal_list
 
 class BrowseVerticalListAdapter(private val context: Context, private val list: ArrayList<HomePageItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG = "BrowseVerticalAdapter";
 
     private val inflater: LayoutInflater = LayoutInflater.from(context);
-    private val offlineMode = App.offlineMode;
 
     private fun gridLayoutManager(count: Int, orientation: Int): GridLayoutManager = GridLayoutManager(context, count, orientation, false);
 
@@ -38,13 +37,13 @@ class BrowseVerticalListAdapter(private val context: Context, private val list: 
         return when (type) {
             HomePageItem.ALBUM -> {
                 val albumsSize = list[position].albumList!!.size;
-                gridLayoutManager(if(offlineMode) { if (albumsSize < 2) albumsSize else 2 } else {2}, GridLayoutManager.HORIZONTAL);
+                gridLayoutManager(if(Constants.OFFLINE_ACCESS) { if (albumsSize < 2) albumsSize else 2 } else {2}, GridLayoutManager.HORIZONTAL);
             }
             HomePageItem.HEADER -> linearLayoutManager(LinearLayoutManager.HORIZONTAL);
             HomePageItem.GENRE -> gridLayoutManager(1, GridLayoutManager.HORIZONTAL);
             HomePageItem.TRACK -> {
                 val tracksSize = list[position].trackList?.size!!;
-                gridLayoutManager(if (offlineMode) { if(tracksSize < 4) tracksSize else 4  } else {3}, GridLayoutManager.HORIZONTAL)
+                gridLayoutManager(if (Constants.OFFLINE_ACCESS) { if(tracksSize < 4) tracksSize else 4  } else {3}, GridLayoutManager.HORIZONTAL)
             }
             else -> {
                 linearLayoutManager(LinearLayoutManager.HORIZONTAL);
@@ -79,7 +78,7 @@ class BrowseVerticalListAdapter(private val context: Context, private val list: 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = inflater.inflate(item_brows_horizontal_list, parent, false);
+        val view = inflater.inflate(item_browse_horizontal_list, parent, false);
         val mainHolder = HomePageViewHolder(view);
 
         return mainHolder;
@@ -102,7 +101,7 @@ class BrowseVerticalListAdapter(private val context: Context, private val list: 
             headerContainer.visibility = if (title == null) View.GONE else View.VISIBLE;
             headerTitle.text = title ?: "";
 
-            if (offlineMode || type == HomePageItem.GENRE)
+            if (type == HomePageItem.GENRE)
                 moreResult.visibility = View.GONE;
 
             initializeLists(holder.adapterPosition, list);
@@ -125,10 +124,10 @@ class BrowseVerticalListAdapter(private val context: Context, private val list: 
         }
     }
 
-    inner class HomePageViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        val headerContainer: ConstraintLayout = itemView?.findViewById(R.id.browse_header)!!;
-        val title: TextView = itemView?.findViewById(R.id.browse_header_title)!!;
-        val moreResult: TextView = itemView?.findViewById(R.id.browse_header_more)!!;
-        val itemsRecycler: RecyclerView = itemView?.findViewById(R.id.browse_horizontal_list)!!;
+    inner class HomePageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val headerContainer: ConstraintLayout = itemView.findViewById(R.id.browse_header)!!;
+        val title: TextView = itemView.findViewById(R.id.browse_header_title)!!;
+        val moreResult: TextView = itemView.findViewById(R.id.browse_header_more)!!;
+        val itemsRecycler: RecyclerView = itemView.findViewById(R.id.browse_horizontal_list)!!;
     }
 }

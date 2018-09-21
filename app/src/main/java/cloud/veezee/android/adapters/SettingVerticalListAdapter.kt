@@ -13,12 +13,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
+import cloud.veezee.android.Constants
 import cloud.veezee.android.R
 import cloud.veezee.android.activities.SettingActivity
 import cloud.veezee.android.application.App
 import cloud.veezee.android.fragments.ThemeFragment
 import cloud.veezee.android.models.SettingModel
-import cloud.veezee.android.utils.Setting
 
 class SettingVerticalListAdapter(private val context: Context, private val list: ArrayList<SettingModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -26,13 +26,10 @@ class SettingVerticalListAdapter(private val context: Context, private val list:
 
     @SuppressLint("WrongConstant")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         var title: TextView? = null;
         val container: ConstraintLayout;
         var icon: ImageView? = null;
         var model: SettingModel? = null;
-
-        val setting = App.setting;
 
         when (holder) {
             is SimpleTextTypeViewHolder -> {
@@ -59,24 +56,22 @@ class SettingVerticalListAdapter(private val context: Context, private val list:
                 title = toggleSwitch;
 
                 if (model.itemType == SettingModel.ItemType.COLORED_PLAYER) {
-                    toggleSwitch.isChecked = setting!!.coloredPlayer;
+                    toggleSwitch.isChecked = Constants.COLORED_PLAYER;
 
                 } else if (model.itemType == SettingModel.ItemType.OFFLINE_ACCESS) {
-                    toggleSwitch.isChecked = setting!!.offlineAccess;
+                    toggleSwitch.isChecked = Constants.OFFLINE_ACCESS;
                 }
 
                 toggleSwitch.setOnCheckedChangeListener { _, isChecked ->
                     if (model.itemType == SettingModel.ItemType.COLORED_PLAYER) {
-                        setting?.coloredPlayer = isChecked;
-                        setting?.save(context);
+                        Constants.COLORED_PLAYER = isChecked;
 
-                        val coloredPlayerChanged: Intent = Intent(Setting.SETTING_NOTIFICATION);
+                        val coloredPlayerChanged: Intent = Intent(Constants.SETTINGS_CHANGED_NOTIFICATION_ID);
                         coloredPlayerChanged.flags = SettingModel.COLORED_PLAYER_CHANGED;
                         LocalBroadcastManager.getInstance(context).sendBroadcast(coloredPlayerChanged);
 
                     } else if (model.itemType == SettingModel.ItemType.OFFLINE_ACCESS) {
-                        setting?.offlineAccess = isChecked;
-                        setting?.save(context);
+                        Constants.OFFLINE_ACCESS = isChecked;
                     }
                 };
             }
@@ -87,7 +82,6 @@ class SettingVerticalListAdapter(private val context: Context, private val list:
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         val view: View;
         val viewHolder: RecyclerView.ViewHolder?;
 
@@ -118,16 +112,16 @@ class SettingVerticalListAdapter(private val context: Context, private val list:
 
     override fun getItemCount(): Int = list.size;
 
-    inner class SimpleTextTypeViewHolder(itemType: View?) : RecyclerView.ViewHolder(itemType) {
-        val container: ConstraintLayout = itemType?.findViewById(R.id.setting_item_type_text_container)!!;
-        val title: TextView = itemType?.findViewById(R.id.setting_item_type_text_text_view)!!;
-        val icon: ImageView = itemType?.findViewById(R.id.setting_item_type_text_icon)!!;
+    inner class SimpleTextTypeViewHolder(itemType: View) : RecyclerView.ViewHolder(itemType) {
+        val container: ConstraintLayout = itemType.findViewById(R.id.setting_item_type_text_container)!!;
+        val title: TextView = itemType.findViewById(R.id.setting_item_type_text_text_view)!!;
+        val icon: ImageView = itemType.findViewById(R.id.setting_item_type_text_icon)!!;
     }
 
-    inner class SwitchTypeViewHolder(itemType: View?) : RecyclerView.ViewHolder(itemType) {
-        val container: ConstraintLayout = itemType?.findViewById(R.id.setting_item_type_switch_container)!!;
+    inner class SwitchTypeViewHolder(itemType: View) : RecyclerView.ViewHolder(itemType) {
+        val container: ConstraintLayout = itemType.findViewById(R.id.setting_item_type_switch_container)!!;
         //val title: TextView = itemType?.findViewById(R.id.setting_item_type_switch_text_view)!!;
-        val icon: ImageView = itemType?.findViewById(R.id.setting_item_type_switch_icon)!!;
-        val switch: Switch = itemType?.findViewById(R.id.setting_item_type_switch_switch)!!;
+        val icon: ImageView = itemType.findViewById(R.id.setting_item_type_switch_icon)!!;
+        val switch: Switch = itemType.findViewById(R.id.setting_item_type_switch_switch)!!;
     }
 }

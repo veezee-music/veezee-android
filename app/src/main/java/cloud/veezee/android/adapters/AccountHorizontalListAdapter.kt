@@ -23,7 +23,7 @@ class AccountHorizontalListAdapter(var context: Context) : RecyclerView.Adapter<
 
     }
 
-    inner class MainViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    inner class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     }
 }

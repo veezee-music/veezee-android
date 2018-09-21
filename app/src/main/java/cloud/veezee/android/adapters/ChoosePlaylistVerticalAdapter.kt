@@ -98,22 +98,22 @@ class ChoosePlaylistVerticalAdapter(val context: Context,val list: ArrayList<Alb
 
     override fun getItemViewType(position: Int): Int = if (position != 0) 0 else 1;
 
-    inner class CreatePlaylistViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    inner class CreatePlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val plus: ImageView = itemView?.findViewById(R.id.plus_image)!!;
-        val container: CardView = itemView?.findViewById(R.id.plus_container)!!;
+        private val plus: ImageView = itemView.findViewById(R.id.plus_image)!!;
+        val container: CardView = itemView.findViewById(R.id.plus_container)!!;
 
         init {
             plus.clipToOutline = true;
         }
     }
 
-    inner class MainViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        val container: CardView = itemView?.findViewById(R.id.playlist_item_container)!!;
-        val title: TextView = itemView?.findViewById(R.id.playlist_item_title)!!;
-        val tracksCount: TextView = itemView?.findViewById(R.id.playlist_item_count)!!;
-        val artwork: ImageView = itemView?.findViewById(R.id.playlist_item_artwork)!!;
-        val circleCheck: ImageView = itemView?.findViewById(R.id.playlist_item_check)!!;
+    inner class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val container: CardView = itemView.findViewById(R.id.playlist_item_container)!!;
+        val title: TextView = itemView.findViewById(R.id.playlist_item_title)!!;
+        val tracksCount: TextView = itemView.findViewById(R.id.playlist_item_count)!!;
+        val artwork: ImageView = itemView.findViewById(R.id.playlist_item_artwork)!!;
+        val circleCheck: ImageView = itemView.findViewById(R.id.playlist_item_check)!!;
 
         init {
             artwork.clipToOutline = true;

@@ -22,6 +22,7 @@ import cloud.veezee.android.adapters.interfaces.OnLoadMoreListener
 import cloud.veezee.android.models.Album
 import cloud.veezee.android.models.HomePageItem
 import cloud.veezee.android.models.Track
+import cloud.veezee.android.utils.RecyclerViewElevationAwareScrollListener
 import kotlinx.android.synthetic.main.activity_albums_track_list.*
 import kotlinx.android.synthetic.main.activity_albums_track_list_content.*
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
@@ -54,8 +55,6 @@ class AlbumsTrackListActivity : BaseActivity() {
     private val volleyRequestListeners = object : HttpRequestListeners.StringResponseListener {
 
         override fun response(response: String?) {
-
-
             if (type == "Playlist" || type == "Album") {
                 itemList.addAll(Gson().fromJson(response, object : TypeToken<ArrayList<Album>>() {}.type));
                 lastId = (itemList[itemList.size - 1] as Album).id;
@@ -158,5 +157,9 @@ class AlbumsTrackListActivity : BaseActivity() {
         listAdapter?.setOnLoadMoreListener = loadMoreListener;
         albumTrackRecycler?.adapter = listAdapter;
         OverScrollDecoratorHelper.setUpOverScroll(albumTrackRecycler, OverScrollDecoratorHelper.ORIENTATION_VERTICAL);
+
+        if(myAppbarLayout != null) {
+            albumTrackRecycler?.addOnScrollListener(RecyclerViewElevationAwareScrollListener(myAppbarLayout!!));
+        }
     }
 }

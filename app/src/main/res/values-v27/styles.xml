@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PurpleDark" parent="AppTheme">
+        <item name="colorPrimary">@color/purple_dark_primary</item>
+        <item name="colorPrimaryDark">@color/purple_dark_primary_dark</item>
+        <item name="colorAccent">@color/purple_dark_accent</item>
+        <item name="primaryText">@color/purple_dark_primary_text</item>
+        <item name="secondaryText">@color/purple_dark_secondary_text</item>
+        <item name="android:navigationBarColor">@color/purple_dark_primary</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+
+    <style name="Black" parent="AppTheme">
+        <item name="colorPrimary">@color/black_primary</item>
+        <item name="colorPrimaryDark">@color/black_primary_dark</item>
+        <item name="colorAccent">@color/black_accent</item>
+        <item name="primaryText">@color/black_primary_text</item>
+        <item name="secondaryText">@color/black_secondary_text</item>
+        <item name="android:navigationBarColor">@color/black_primary</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+
+    <style name="White" parent="AppTheme">
+        <item name="colorPrimary">@color/white_primary</item>
+        <item name="colorPrimaryDark">@color/white_primary_dark</item>
+        <item name="colorAccent">@color/white_accent</item>
+        <item name="primaryText">@color/white_primary_text</item>
+        <item name="secondaryText">@color/white_secondary_text</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

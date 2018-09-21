@@ -1,8 +1,8 @@
 package cloud.veezee.android.utils
 
 import android.content.Context
+import cloud.veezee.android.Constants
 import com.google.gson.Gson
-import cloud.veezee.android.application.App
 import cloud.veezee.android.utils.interfaces.OfflinePlayListResponseListener
 import cloud.veezee.android.models.Album
 import cloud.veezee.android.models.HomePageItem
@@ -31,7 +31,7 @@ class PlayListFactory(val context: Context) {
             item = Couchbase.getInstance(context)?.getById(track?.id!!);
             if(item == null) {
 
-                val proxy: String = if(App.setting!!.offlineAccess) proxy!!.getProxyUrl(track?.fileName)!! else track!!.fileName!!;
+                val proxy: String = if(Constants.OFFLINE_ACCESS) proxy!!.getProxyUrl(track?.fileName)!! else track!!.fileName!!;
 
                 item = PlayableItem(proxy);
                 item._id = track?._id
@@ -67,7 +67,7 @@ class PlayListFactory(val context: Context) {
 
             item = Couchbase.getInstance(context)?.getById(track.id!!);
             if(item == null) {
-                val proxy: String = if(App.setting!!.offlineAccess) proxy!!.getProxyUrl(track.fileName)!! else track.fileName!!;
+                val proxy: String = if(Constants.OFFLINE_ACCESS) proxy!!.getProxyUrl(track.fileName)!! else track.fileName!!;
 
                 item = PlayableItem(proxy);
                 item._id = track._id
@@ -85,7 +85,7 @@ class PlayListFactory(val context: Context) {
     }
 
     fun shuffle(playList: ArrayList<PlayableItem>): ArrayList<PlayableItem> {
-        Collections.shuffle(playList);
+        playList.shuffle();
 
         return playList;
     }
