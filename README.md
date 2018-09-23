@@ -96,10 +96,9 @@ The server can be set up either on the localhost or the Internet. This server's 
 
 ## Contributors
 
-veezee (Android) is designed and developed by <!--**[Emad Mahouti](http://emadmahouti.ir/)** with counsel from--> **[Vahid Amiri Motlagh](https://github.com/vsg24)**.
+veezee (Android) is designed and developed by [Emad Mahouti](http://emadmahouti.ir/)
 
-<!--Contact info: [GitHub page](https://github.com/emadmahouti).-->
-Contact info: [GitHub page](https://github.com/vsg24)
+Contact info: [GitHub page](https://github.com/emadmahouti).
 
 ## License
 veezee (Android) is available under the MIT license. See LICENSE file for more info.
