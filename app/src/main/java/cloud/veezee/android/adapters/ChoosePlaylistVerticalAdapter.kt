@@ -13,7 +13,7 @@ import cloud.veezee.android.models.Album
 import cloud.veezee.android.R
 import cloud.veezee.android.application.GlideApp
 
-class ChoosePlaylistVerticalAdapter(val context: Context,val list: ArrayList<Album>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChoosePlaylistVerticalAdapter(val context: Context, val list: ArrayList<Album>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val inflater = LayoutInflater.from(context);
     private var targetPosition: Int = -1;
@@ -44,7 +44,6 @@ class ChoosePlaylistVerticalAdapter(val context: Context,val list: ArrayList<Alb
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         if (holder is MainViewHolder) {
-
             val album: Album = list[holder.adapterPosition - 1];
 
             val title = holder.title;

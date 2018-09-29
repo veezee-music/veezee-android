@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import cloud.veezee.android.Constants
 import com.google.gson.Gson
@@ -37,6 +38,7 @@ class AlbumActivity : BaseActivity() {
     var title: TextView? = null;
     var artist: TextView? = null;
     var playButton: Button? = null;
+    var progressBar: ProgressBar? = null;
 
     private var trackAdapter: AlbumVerticalListAdapter? = null
     private var album: Album? = null;
@@ -68,14 +70,18 @@ class AlbumActivity : BaseActivity() {
         artwork?.clipToOutline = true;
         title?.text = album?.title;
         artist?.text = album?.artist?.name;
+        progressBar = loading;
 
         GlideApp.with(context).load(album?.image).into(artwork!!);
     }
 
     private fun initializeList() {
         if(album?.tracks == null || album?.tracks!!.count() <= 0) {
+            progressBar?.visibility = View.VISIBLE;
             API.Get.album(this, album?.id ?: "", object : HttpRequestListeners.StringResponseListener {
                 override fun response(response: String?) {
+                    progressBar?.visibility = View.GONE;
+
                     album = Gson().fromJson(response, object : TypeToken<Album>() {}.type);
 
                     prepareComponents();
@@ -83,7 +89,7 @@ class AlbumActivity : BaseActivity() {
                 }
 
                 override fun error(error: JSONObject?) {
-
+                    progressBar?.visibility = View.GONE;
                 }
             });
 

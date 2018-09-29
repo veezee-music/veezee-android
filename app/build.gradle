@@ -80,6 +80,8 @@ android {
         implementation 'com.couchbase.lite:couchbase-lite-android:2.0.0'
         implementation 'com.github.bumptech.glide:glide:4.7.1'
         implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+        implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
+        implementation 'jp.wasabeef:glide-transformations:3.3.0'
         kapt 'com.github.bumptech.glide:compiler:4.7.1'
 
         implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {

@@ -2,13 +2,17 @@ package cloud.veezee.android.utils
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.WallpaperManager
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.ResultReceiver
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
+import android.os.*
 import android.support.v4.content.LocalBroadcastManager
+import cloud.veezee.android.BuildConfig
+import cloud.veezee.android.Constants
+import cloud.veezee.android.application.App
 import cloud.veezee.android.models.PlayableItem
 import cloud.veezee.android.services.AudioService
 import com.google.gson.Gson
@@ -40,6 +44,44 @@ class AudioPlayer {
 
             return INSTANCE!!;
         }
+
+        var originalSystemLockScreenWallpaper: Drawable? = null;
+
+        fun setLockScreenWallpaper(resource: Bitmap) {
+            return;
+            if(!Constants.COLORED_PLAYER) {
+                return;
+            }
+
+            Handler(Looper.getMainLooper()).post {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    val wallpaperManager = WallpaperManager.getInstance(App.instance);
+                    if(wallpaperManager.isSetWallpaperAllowed) {
+                        if(originalSystemLockScreenWallpaper == null) {
+                            // requires external storage permission
+                            originalSystemLockScreenWallpaper = wallpaperManager.drawable;
+                        }
+                        wallpaperManager.setBitmap(resource, null, true, WallpaperManager.FLAG_LOCK);
+                    }
+                }
+            };
+        }
+
+        fun resetLockScreenWallpaper() {
+            return;
+            if(!Constants.COLORED_PLAYER) {
+                return;
+            }
+
+            Handler(Looper.getMainLooper()).post {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    val wallpaperManager = WallpaperManager.getInstance(App.instance);
+                    if(wallpaperManager.isSetWallpaperAllowed && originalSystemLockScreenWallpaper != null) {
+                        setLockScreenWallpaper(BitmapUtils.drawableToBitmap(originalSystemLockScreenWallpaper));
+                    }
+                }
+            }
+        }
     }
 
     private lateinit var context: Context;
@@ -64,7 +106,6 @@ class AudioPlayer {
     }
 
     fun start(playList: ArrayList<PlayableItem>? = null, index: Int, playListCode: Int = 0) {
-
         if (playList != null) {
             this.code = playListCode;
             val serializePlayList = Gson().toJson(playList);
@@ -86,14 +127,16 @@ class AudioPlayer {
 
         val audioServiceIntent = Intent(context, AudioService::class.java);
         context.stopService(audioServiceIntent);
+
+        resetLockScreenWallpaper();
     }
 
     fun releaseController() {
         this.code = 0;
         myPlayableItem = null;
-        myIndex = -1
+        myIndex = -1;
 
-        val i = Intent(ACTION_CHANGE_BOTTOM_PLAYER_STATE)
+        val i = Intent(ACTION_CHANGE_BOTTOM_PLAYER_STATE);
         i.putExtra("open", false);
         context.sendBroadcast(i);
     }
@@ -104,6 +147,7 @@ class AudioPlayer {
 
     fun pause() {
         sendBroadCast(getIntent(FLAG_PAUSE, ACTION_PLAYER_CONTROLLER));
+        resetLockScreenWallpaper();
     }
 
     fun next() {
@@ -160,7 +204,6 @@ class AudioPlayer {
     inner class Receiver(handler: Handler?) : ResultReceiver(handler) {
         override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
             when (resultCode) {
-
                 AudioService.FLAG_PLAYER_STATE -> {
                     val playerState = resultData?.getInt("playerState", 0);
 

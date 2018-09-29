@@ -52,6 +52,7 @@ class AppClient(val context: Context) {
             const val CREATE_PLAYLIST = "/account/playlists/new";
             const val DELETE_PLAYLIST = "/account/playlists/delete";
             const val ADD_TRACK_TO_PLAYLIST = "/account/playlists/tracks/add";
+            const val USER_TRACKS_HISTORY = "/account/vex/user-tracks-history";
         }
     }
 

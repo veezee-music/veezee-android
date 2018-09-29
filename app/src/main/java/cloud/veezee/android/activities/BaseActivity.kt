@@ -1,10 +1,12 @@
 package cloud.veezee.android.activities
 
+import android.Manifest
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.app.Activity
+import android.app.AlertDialog
+import android.app.WallpaperManager
+import android.content.*
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
@@ -12,6 +14,7 @@ import android.media.AudioManager
 import android.os.*
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.AppBarLayout
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -23,8 +26,6 @@ import kotlinx.android.synthetic.main.activity_home_page_content.*
 import kotlinx.android.synthetic.main.content_player.*
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.graphics.drawable.DrawableCompat
-import android.util.Log
-import android.util.TypedValue
 import android.view.animation.AnimationUtils
 import android.widget.*
 import cloud.veezee.android.Constants
@@ -94,7 +95,7 @@ open class BaseActivity : AppCompatActivity() {
     private var settingChangedReceiver: BroadcastReceiver = SettingChangedReceiver();
     private var metaDataReceiver: BroadcastReceiver = AudioReceiver();
 
-    private val glideSimpleTarget = object : SimpleTarget<Bitmap>() {
+    private val logoImageLoaderListener = object : SimpleTarget<Bitmap>() {
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
             bottomPlayerArtwork?.setImageBitmap(resource);
             playerArtWork?.setImageBitmap(resource);
@@ -102,6 +103,8 @@ open class BaseActivity : AppCompatActivity() {
             if (Constants.COLORED_PLAYER) {
                 val task = SetBlurredArtWork();
                 task.execute(resource);
+
+                AudioPlayer.setLockScreenWallpaper(resource);
             }
         }
     }
@@ -124,6 +127,8 @@ open class BaseActivity : AppCompatActivity() {
             }
         }
     }
+
+    val READ_STORAGE_PERMISSION_REQUEST_CODE = 1111;
 
 
 //    private val audioPlayBack = object {
@@ -529,7 +534,7 @@ open class BaseActivity : AppCompatActivity() {
         GlideApp.with(context)
                 .asBitmap()
                 .load(imageUrl)
-                .into(glideSimpleTarget);
+                .into(logoImageLoaderListener);
 
         playerTitle?.text = title
         bottomPlayerTitle?.text = title;
@@ -617,6 +622,44 @@ open class BaseActivity : AppCompatActivity() {
 
         if (now() > App.autoLoginSessionExpireDate && !Constants.GUEST_MODE)
             checkUserLogin();
+
+//        if(!checkPermissionForReadExtertalStorage()) {
+//            showNeedForExternalStorageDialog();
+//        }
+    }
+
+    fun showNeedForExternalStorageDialog() {
+        val builder: AlertDialog.Builder? = AlertDialog.Builder(this);
+        builder?.setMessage("veezee needs external storage access to enhance your experience. Please allow it in the next prompt.")?.setTitle("Permission needed");
+        builder?.apply {
+            setPositiveButton("OK", { dialog, id ->
+                if(!checkPermissionForReadExtertalStorage()) {
+                    requestPermissionForReadExtertalStorage();
+                }
+            })
+            setNegativeButton("Cancel", { dialog, id ->
+                dialog.dismiss();
+            })
+        }
+
+        val dialog: AlertDialog? = builder?.create();
+        dialog?.show();
+    }
+
+    fun checkPermissionForReadExtertalStorage(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val result = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED;
+        }
+
+        return false;
+    }
+
+    fun requestPermissionForReadExtertalStorage() {
+        try {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    READ_STORAGE_PERMISSION_REQUEST_CODE)
+        } catch (e: Exception) { }
     }
 
     fun loadPreferences() {

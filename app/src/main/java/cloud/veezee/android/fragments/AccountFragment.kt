@@ -17,21 +17,28 @@ import cloud.veezee.android.google.interfaces.GoogleSignOutListener
 import cloud.veezee.android.utils.now
 import cloud.veezee.android.utils.UserManager
 import cloud.veezee.android.R
+import cloud.veezee.android.api.API
+import cloud.veezee.android.api.tracksHistory
+import cloud.veezee.android.api.utils.interfaces.HttpRequestListeners
+import cloud.veezee.android.models.Track
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.yarolegovich.discretescrollview.DiscreteScrollView
 import java.util.concurrent.TimeUnit
+import com.yarolegovich.discretescrollview.transform.Pivot
+import com.yarolegovich.discretescrollview.transform.ScaleTransformer
+
 
 class AccountFragment : Fragment() {
 
-    private val TAG = "AccountFragment Console";
+    private val TAG = "AccountFragment";
 
-//    private var daysLeftText: TextView? = null;
-//    private var hoursLeftText: TextView? = null;
     private var userName: TextView? = null;
     private var userEmail: TextView? = null;
-    private var list: RecyclerView? = null;
+    private var list: DiscreteScrollView? = null;
 
     private var account: UserManager? = null;
     private var google: GoogleSignInHelper? = null;
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View? = inflater.inflate(R.layout.fragment_account, container, false);
@@ -43,58 +50,40 @@ class AccountFragment : Fragment() {
         return view;
     }
 
-    private fun recentlyPlayedList() {
-        val adapter = AccountHorizontalListAdapter(context!!);
-        list?.layoutManager = CenterZoomLayoutManager(context, LinearLayout.HORIZONTAL, false);
-        list?.adapter = adapter;
-        list?.smoothScrollBy(1, 0);
-        LinearSnapHelper().attachToRecyclerView(list);
+    private val volleyRequestListeners = object : HttpRequestListeners.StringResponseListener {
+        override fun response(response: String?) {
+            (list?.adapter as AccountHorizontalListAdapter).itemList = Gson().fromJson(response, object : TypeToken<ArrayList<Track>>() {}.type);
+            list?.adapter?.notifyDataSetChanged();
+        }
     }
 
-//    private fun leftTime(start: Long = 0, end: Long = 0): HashMap<String, Long> {
-//
-//        var secondDif = Math.abs(end - start);
-//
-//        val time = HashMap<String, Long>();
-//
-//        val day = TimeUnit.SECONDS.toDays(secondDif);
-//        secondDif -= TimeUnit.DAYS.toSeconds(day);
-//
-//        val hours = TimeUnit.SECONDS.toHours(secondDif);
-//        secondDif -= TimeUnit.HOURS.toSeconds(hours);
-//
-//        val minute = TimeUnit.SECONDS.toMinutes(secondDif);
-//        secondDif -= TimeUnit.MINUTES.toMillis(minute);
-//
-//        time.put("day", day);
-//        time.put("hour", hours);
-//        time.put("minute", minute);
-//
-//        return time;
-//    }
+    fun loadRecentlyPlayedTracks() {
+        API.VEX.tracksHistory(this.context!!, volleyRequestListeners);
+    }
+
+    private fun recentlyPlayedList() {
+        //list?.layoutManager = CenterZoomLayoutManager(context, LinearLayout.HORIZONTAL, false);
+        list?.adapter = AccountHorizontalListAdapter(context!!);
+        list?.setItemTransformer(ScaleTransformer.Builder()
+                .setMaxScale(1.05f)
+                .setMinScale(0.8f)
+                .setPivotX(Pivot.X.CENTER) // CENTER is a default one
+                .setPivotY(Pivot.Y.CENTER) // CENTER is a default one
+                .build())
+        list?.setSlideOnFling(true);
+
+        loadRecentlyPlayedTracks();
+    }
 
     private fun initComponents(view: View?) {
-
         userName = view?.findViewById(R.id.user_name);
         userEmail = view?.findViewById(R.id.user_email);
         list = view?.findViewById(R.id.recently_played);
 
-        account = UserManager.get(context!!);
+        account = UserManager.get(context);
 
         userName?.text = account?.name;
         userEmail?.text = account?.email;
-
-//        if (account?.isAccessExpired!!) {
-//            daysLeftText?.text = "0";
-//            hoursLeftText?.text = context?.getString(R.string.expired);
-//        } else {
-//            val leftTime = leftTime(account?.access?.expiresIn!!, now() / 1000);
-//            val leftDays = leftTime["day"];
-//            val leftHours = leftTime["hour"];
-//
-//            daysLeftText?.text = leftDays.toString();
-//            hoursLeftText?.text = leftHours.toString() + if (leftHours!! > 0) " Hours" else "Hour";
-//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -104,7 +93,6 @@ class AccountFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
         val id = item?.itemId;
 
         when (id) {
@@ -128,6 +116,7 @@ class AccountFragment : Fragment() {
                 return;
             }
         });
+
         UserManager.remove(context!!);
     }
 }

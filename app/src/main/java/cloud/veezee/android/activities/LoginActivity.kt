@@ -309,7 +309,7 @@ class LoginActivity : AppCompatActivity() {
         dialogBox.setCancelable(false);
 
         val cDialog = dialogBox.create();
-        cDialog.window.setBackgroundDrawableResource(android.R.color.transparent);
+        cDialog.window?.setBackgroundDrawableResource(android.R.color.transparent);
 
         return cDialog;
     }
@@ -338,14 +338,14 @@ class LoginActivity : AppCompatActivity() {
         val email = view.findViewById<TextInputEditText>(R.id.dialog_register_email);
         val password = view.findViewById<TextInputEditText>(R.id.dialog_register_password);
 
-        submit?.setOnClickListener({
+        submit?.setOnClickListener {
             submit(email.text.toString(), password.text.toString(), name.text.toString());
-        });
+        };
 
-        cancel?.setOnClickListener({
+        cancel?.setOnClickListener {
             dialog?.dismiss();
             AppClient.cancelLastRequest();
-        })
+        }
 
         dialog?.show();
     }
@@ -364,14 +364,14 @@ class LoginActivity : AppCompatActivity() {
         val password = view.findViewById<TextInputEditText>(R.id.dialog_login_password);
 
 
-        submit?.setOnClickListener({
+        submit?.setOnClickListener {
             submit(email.text.toString(), password.text.toString());
-        });
+        };
 
-        cancel?.setOnClickListener({
+        cancel?.setOnClickListener {
             dialog?.dismiss();
             AppClient.cancelLastRequest();
-        })
+        }
 
         dialog?.show();
     }
@@ -395,7 +395,6 @@ class LoginActivity : AppCompatActivity() {
      * Logo blinker animation
      */
     private fun blinkerAnimation(view: View?) {
-
         val blinker = AnimationUtils.loadAnimation(context, R.anim.blink_animation);
         blinker?.setAnimationListener(logoAnimationListener);
         view?.startAnimation(blinker);
@@ -407,7 +406,6 @@ class LoginActivity : AppCompatActivity() {
      *
      */
     private fun entryAnimation(delay: Long, duration: Long = 1000) {
-
         object : CountDownTimer(delay, delay) {
 
             override fun onFinish() {
@@ -510,7 +508,6 @@ class LoginActivity : AppCompatActivity() {
      * Buttons onClick method
      */
     fun buttons(view: View) {
-
         val loginId = loginButton?.id
         val accountId = registerButton?.id;
         val googleId = googleButton?.id;

@@ -33,12 +33,12 @@ class UserManager {
     companion object {
         const val NAME = "UserManager"
 
-        fun get(context: Context): UserManager {
+        fun get(context: Context?): UserManager {
 
             return getUser(context);
         }
 
-        private fun getUser(context: Context): UserManager {
+        private fun getUser(context: Context?): UserManager {
 
             return if (SharedPreferencesHelper(context).exist(NAME)) {
                 val serializeAccount = SharedPreferencesHelper(context).get(NAME);
