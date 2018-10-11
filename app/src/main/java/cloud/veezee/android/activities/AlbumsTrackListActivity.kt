@@ -71,14 +71,6 @@ class AlbumsTrackListActivity : BaseActivity() {
             (albumTrackRecycler as View).contentReadyToShow(true, loading);
         }
 
-        override fun headers(json: JSONObject) {
-
-        }
-
-        override fun error(error: JSONObject?) {
-
-        }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -53,18 +53,13 @@ class BrowseFragment : Fragment() {
     private val volleyResponseListener = object : HttpRequestListeners.StringResponseListener {
 
         override fun response(response: String?) {
-           cache?.cacheHomePageContent(response!!);
+            if(response == null)
+                return;
 
+            cache?.cacheHomePageContent(response);
             updateList(response);
         }
 
-        override fun error(error: JSONObject?) {
-
-        }
-
-        override fun headers(json: JSONObject) {
-
-        }
     };
 
     //methods

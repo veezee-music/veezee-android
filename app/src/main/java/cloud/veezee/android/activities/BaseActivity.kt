@@ -35,11 +35,11 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.android.exoplayer2.Player
 import cloud.veezee.android.api.API
 import cloud.veezee.android.api.utils.AppClient
+import cloud.veezee.android.api.utils.interfaces.HttpRequestListeners
 import cloud.veezee.android.application.GlideApp
 import cloud.veezee.android.fragments.PlayListOptionFragment
 import cloud.veezee.android.google.GoogleSignInHelper
 import cloud.veezee.android.google.interfaces.GoogleSignOutListener
-import cloud.veezee.android.api.utils.interfaces.HttpRequestListeners
 import cloud.veezee.android.api.validateLogin
 import cloud.veezee.android.models.Color
 import cloud.veezee.android.models.SettingModel
@@ -109,19 +109,16 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    private val validateLoginResponseListener = object : HttpRequestListeners.JsonObjectResponseListener {
-        override fun response(response: JSONObject) {
-
+    private val validateLoginResponseListener = object : HttpRequestListeners.StringResponseListener {
+        override fun response(response: String?) {
             App.autoLoginSessionExpireDate = now();
         }
 
-        override fun headers(json: JSONObject) {
+        override fun error(er: String?, responseStatusCode: Int?) {
+            if(er == null)
+                return;
 
-        }
-
-        override fun error(er: JSONObject) {
-            val statusCode = er[AppClient.STATUS_CODE];
-            if (statusCode == 500 || statusCode == 410) {
+            if (responseStatusCode == 500 || responseStatusCode == 410) {
                 val logoutRequire = Intent(context, LogoutRequireActivity::class.java);
                 startActivity(logoutRequire);
             }
@@ -632,14 +629,14 @@ open class BaseActivity : AppCompatActivity() {
         val builder: AlertDialog.Builder? = AlertDialog.Builder(this);
         builder?.setMessage("veezee needs external storage access to enhance your experience. Please allow it in the next prompt.")?.setTitle("Permission needed");
         builder?.apply {
-            setPositiveButton("OK", { dialog, id ->
+            setPositiveButton("OK") { dialog, id ->
                 if(!checkPermissionForReadExtertalStorage()) {
                     requestPermissionForReadExtertalStorage();
                 }
-            })
-            setNegativeButton("Cancel", { dialog, id ->
+            }
+            setNegativeButton("Cancel") { dialog, id ->
                 dialog.dismiss();
-            })
+            }
         }
 
         val dialog: AlertDialog? = builder?.create();

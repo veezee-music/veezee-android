@@ -88,7 +88,7 @@ class AlbumActivity : BaseActivity() {
                     initializeList();
                 }
 
-                override fun error(error: JSONObject?) {
+                override fun error(er: String?, responseStatusCode: Int?) {
                     progressBar?.visibility = View.GONE;
                 }
             });

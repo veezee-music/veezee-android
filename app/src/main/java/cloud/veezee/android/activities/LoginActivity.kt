@@ -197,41 +197,45 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login(email: String, password: String) {
-        API.Account.login(context, email, password, object : HttpRequestListeners.JsonObjectResponseListener {
+        API.Account.login(context, email, password, object : HttpRequestListeners.StringResponseListener {
 
-            override fun headers(json: JSONObject) {
-            }
+            override fun response(response: String?) {
+                val responseObj = JSONObject(response);
 
-            override fun error(er: JSONObject) {
-                showToast(er.getString(AppClient.ERROR_MESSAGE));
-                resetUIonRequestFailed();
-            }
-
-            override fun response(response: JSONObject) {
-                val user = mkUserFromJson(response);
+                val user = mkUserFromJson(responseObj);
                 user.loginWith = UserManager.Account.CUSTOM;
                 user.set(context);
 
                 App.autoLoginSessionExpireDate = now();
                 redirectToMainPage(1000);
             }
+
+            override fun error(er: String?, responseStatusCode: Int?) {
+                if(er == null)
+                    return;
+
+                showToast(er);
+                resetUIonRequestFailed();
+            }
+
         });
     }
 
     private fun register(email: String, password: String, name: String) {
-        API.Account.register(context, email, password, name, object : HttpRequestListeners.JsonObjectResponseListener {
-            override fun response(response: JSONObject) {
+        API.Account.register(context, email, password, name, object : HttpRequestListeners.StringResponseListener {
+
+            override fun response(response: String?) {
                 login(email, password);
             }
 
-            override fun headers(json: JSONObject) {
+            override fun error(er: String?, responseStatusCode: Int?) {
+                if(er == null)
+                    return;
 
-            }
-
-            override fun error(er: JSONObject) {
-                showToast(er.getString(AppClient.ERROR_MESSAGE));
+                showToast(er);
                 resetUIonRequestFailed();
             }
+
         });
     }
 
@@ -242,10 +246,11 @@ class LoginActivity : AppCompatActivity() {
         retryButton?.visibility = View.GONE;
         offlineButton?.visibility = View.GONE;
 
-        API.Account.validateLogin(context, token, object : HttpRequestListeners.JsonObjectResponseListener {
-            override fun response(response: JSONObject) {
+        API.Account.validateLogin(context, token, object : HttpRequestListeners.StringResponseListener {
+            override fun response(response: String?) {
+                val responseObj = JSONObject(response);
 
-                val user = mkUserFromJson(response);
+                val user = mkUserFromJson(responseObj);
                 user.loginWith = UserManager.get(context).loginWith;
                 user.set(context);
 
@@ -253,15 +258,12 @@ class LoginActivity : AppCompatActivity() {
                 redirectToMainPage(1000);
             }
 
-            override fun headers(json: JSONObject) {
-
-            }
-
-            override fun error(er: JSONObject) {
-                val serverStatusCode: Int = er.getInt(AppClient.STATUS_CODE);
+            override fun error(er: String?, responseStatusCode: Int?) {
+                if(er == null)
+                    return;
 
                 mainLoading?.visibility = View.INVISIBLE;
-                if (serverStatusCode == 410 || serverStatusCode == 500) {
+                if (responseStatusCode == 410 || responseStatusCode == 500) {
                     entryAnimation(2000);
                     logout();
                 } else {
@@ -278,10 +280,12 @@ class LoginActivity : AppCompatActivity() {
     private fun loginWithGoogle(account: GoogleSignInAccount?) {
         if (account != null) {
 
-            API.Account.googleLogin(context, account.serverAuthCode, object : HttpRequestListeners.JsonObjectResponseListener {
-                override fun response(response: JSONObject) {
+            API.Account.googleLogin(context, account.serverAuthCode, object : HttpRequestListeners.StringResponseListener {
 
-                    val user = mkUserFromJson(response);
+                override fun response(response: String?) {
+                    val responseObj = JSONObject(response);
+
+                    val user = mkUserFromJson(responseObj);
                     user.loginWith = UserManager.Account.GOOGLE;
                     user.set(context);
 
@@ -289,13 +293,10 @@ class LoginActivity : AppCompatActivity() {
                     redirectToMainPage(1000);
                 }
 
-                override fun headers(json: JSONObject) {
-
-                }
-
-                override fun error(er: JSONObject) {
+                override fun error(er: String?, responseStatusCode: Int?) {
                     showToast(context.getString(R.string.google_error));
                 }
+
             });
         } else {
             showToast(context.getString(R.string.google_error));

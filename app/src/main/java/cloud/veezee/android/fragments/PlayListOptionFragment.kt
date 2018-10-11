@@ -1,5 +1,6 @@
 package cloud.veezee.android.fragments
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -52,14 +53,13 @@ class PlayListOptionFragment : BottomSheetDialogFragment() {
 
     private val onConfirmClickListener = View.OnClickListener {
         if (lastItemSelected != -1) {
-            //confirm
-
+            // confirm
             val track = Gson().fromJson(trackJson, Track::class.java);
             val playlist = albums[listPosition];
 
             API.Account.PlayLists.Track.add(context!!, track, playlist, addTrackToThePlaylistVolleyResponseListener);
         } else {
-            //cancel
+            // cancel
             dismiss();
             AppClient.cancelLastRequest();
         }
@@ -76,21 +76,16 @@ class PlayListOptionFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private val addTrackToThePlaylistVolleyResponseListener = object : HttpRequestListeners.JsonObjectResponseListener {
-        override fun response(response: JSONObject) {
+    private val addTrackToThePlaylistVolleyResponseListener = object : HttpRequestListeners.StringResponseListener {
 
+        override fun response(response: String?) {
+            dismiss();
         }
 
-        override fun headers(json: JSONObject) {
-
-        }
-
-        override fun error(er: JSONObject) {
-            Log.i(TAG, er.getString(AppClient.ERROR_MESSAGE));
-        }
     }
 
     private val getPlayListVolleyResponseListener = object : HttpRequestListeners.StringResponseListener {
+
         override fun response(response: String?) {
 
             if (albums.size != 0)
@@ -102,16 +97,10 @@ class PlayListOptionFragment : BottomSheetDialogFragment() {
             (list as View).contentReadyToShow(true, loading);
         }
 
-        override fun headers(json: JSONObject) {
-
-        }
-
-        override fun error(error: JSONObject?) {
-            Log.i(TAG, error?.getString(AppClient.STATUS_CODE));
-        }
     }
 
     private val onItemClickListener = object : OnListItemClickListener {
+        @SuppressLint("InflateParams")
         override fun onClick(id: String, position: Int, extra: Int?) {
             if (position != 0) {
                 listPosition = position - 1;
@@ -125,14 +114,16 @@ class PlayListOptionFragment : BottomSheetDialogFragment() {
                 }
             } else {
                 val view = LayoutInflater.from(context).inflate(R.layout.dialog_create_playlist, null);
-                CreatePlaylist().whit(context!!).view(view).show();
+                CreatePlaylistAlertDialog().with(context!!).view(view).show();
             }
 
         }
     }
 
+    @SuppressLint("RestrictedApi", "InflateParams")
     override fun setupDialog(dialog: Dialog?, style: Int) {
         super.setupDialog(dialog, style);
+
         val view = LayoutInflater.from(context).inflate(R.layout.fragment_playlist_option, null);
 
         trackJson = arguments?.getString("trackBundle")!!;
@@ -164,75 +155,69 @@ class PlayListOptionFragment : BottomSheetDialogFragment() {
         list.adapter = adapter;
     }
 
-    inner class CreatePlaylist {
-
-        private var dialog: AlertDialog.Builder? = null;
-        private var d: AlertDialog? = null;
+    inner class CreatePlaylistAlertDialog {
+        private var dialogBuilder: AlertDialog.Builder? = null;
+        private var alertDialog: AlertDialog? = null;
         private var context: Context? = null;
         private var onProcess = false;
 
-        private lateinit var textBox: TextInputEditText;
+        private lateinit var titleEditText: TextInputEditText;
         private lateinit var confirm: Button;
         private lateinit var cancel: Button;
         private lateinit var createPlaylistLoading: ProgressBar;
 
-        private val volleyResponseListener = object : HttpRequestListeners.JsonObjectResponseListener {
-            override fun response(response: JSONObject) {
-                val album: Album = Gson().fromJson(response.toString(), Album::class.java);
+        private val volleyResponseListener = object : HttpRequestListeners.StringResponseListener {
+            override fun response(response: String?) {
+                val album: Album = Gson().fromJson(response, Album::class.java);
 
                 albums.add(0, album);
                 adapter?.notifyDataSetChanged();
 
-                d?.dismiss();
+                alertDialog?.dismiss();
             }
 
-            override fun headers(json: JSONObject) {
-
-            }
-
-            override fun error(er: JSONObject) {
+            override fun error(er: String?, responseStatusCode: Int?) {
                 onProcess = false;
                 createPlaylistLoading.visibility = View.INVISIBLE;
             }
         }
 
-        fun whit(context: Context): CreatePlaylist {
+        fun with(context: Context): CreatePlaylistAlertDialog {
             this.context = context;
 
-            dialog = AlertDialog.Builder(context);
+            dialogBuilder = AlertDialog.Builder(context);
 
             return this;
         }
 
-        fun view(view: View): CreatePlaylist {
-            dialog?.setView(view);
+        fun view(view: View): CreatePlaylistAlertDialog {
+            dialogBuilder?.setView(view);
 
             prepareComponent(view);
 
             return this;
         }
 
-        fun show(): CreatePlaylist {
+        fun show(): CreatePlaylistAlertDialog {
 
-            d = dialog?.create();
-            d?.show();
+            alertDialog = dialogBuilder?.create();
+            alertDialog?.show();
 
             return this;
         }
 
         private fun prepareComponent(view: View) {
-            textBox = view.findViewById(R.id.create_playlist_edit_text);
-            confirm = view.findViewById(R.id.create_playlist_confirm);
-            cancel = view.findViewById(R.id.create_playlist_cancel);
+            titleEditText = view.findViewById(R.id.title_edit_text);
+            confirm = view.findViewById(R.id.submit_button);
+            cancel = view.findViewById(R.id.cancel_button);
             createPlaylistLoading = view.findViewById(R.id.create_playlist_confirm_loading);
 
             confirm.setOnClickListener {
-
                 if (!onProcess) {
 
                     createPlaylistLoading.visibility = View.VISIBLE;
 
-                    val title: String = textBox.text.toString();
+                    val title: String = titleEditText.text.toString();
                     API.Account.PlayLists.new(context!!, title, volleyResponseListener);
 
                     onProcess = true;
@@ -240,7 +225,7 @@ class PlayListOptionFragment : BottomSheetDialogFragment() {
             }
 
             cancel.setOnClickListener {
-                d?.dismiss();
+                alertDialog?.dismiss();
             }
         }
     }

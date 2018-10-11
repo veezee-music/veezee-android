@@ -53,11 +53,9 @@ class SearchFragment : Fragment() {
     }
 
     private val volleyResponseListener = object : HttpRequestListeners.StringResponseListener {
-        override fun headers(json: JSONObject) {
-
-        }
-
         override fun response(response: String?) {
+            if(response == null)
+                return;
 
             if (searchItems.size > 0) {
                 searchItems.clear();
@@ -71,9 +69,6 @@ class SearchFragment : Fragment() {
 
         }
 
-        override fun error(error: JSONObject?) {
-
-        }
     };
 
     private fun initializeList() {

@@ -1,38 +1,41 @@
 package cloud.veezee.android.fragments
 
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.TextInputEditText
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearSnapHelper
-import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.*
 import android.widget.Button
-import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import cloud.veezee.android.activities.LoginActivity
 import cloud.veezee.android.adapters.AccountHorizontalListAdapter
-import cloud.veezee.android.externalComponentsAndLibs.CenterZoomLayoutManager
 import cloud.veezee.android.google.GoogleSignInHelper
 import cloud.veezee.android.google.interfaces.GoogleSignOutListener
-import cloud.veezee.android.utils.now
 import cloud.veezee.android.utils.UserManager
 import cloud.veezee.android.R
 import cloud.veezee.android.api.API
 import cloud.veezee.android.api.tracksHistory
+import cloud.veezee.android.api.updateNameAndPassword
 import cloud.veezee.android.api.utils.interfaces.HttpRequestListeners
+import cloud.veezee.android.models.Album
 import cloud.veezee.android.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.yarolegovich.discretescrollview.DiscreteScrollView
-import java.util.concurrent.TimeUnit
 import com.yarolegovich.discretescrollview.transform.Pivot
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer
-
+import org.json.JSONObject
 
 class AccountFragment : Fragment() {
 
     private val TAG = "AccountFragment";
 
+    private var changeNameAndPassword: TextView? = null;
     private var userName: TextView? = null;
     private var userEmail: TextView? = null;
     private var list: DiscreteScrollView? = null;
@@ -62,7 +65,6 @@ class AccountFragment : Fragment() {
     }
 
     private fun recentlyPlayedList() {
-        //list?.layoutManager = CenterZoomLayoutManager(context, LinearLayout.HORIZONTAL, false);
         list?.adapter = AccountHorizontalListAdapter(context!!);
         list?.setItemTransformer(ScaleTransformer.Builder()
                 .setMaxScale(1.05f)
@@ -76,6 +78,7 @@ class AccountFragment : Fragment() {
     }
 
     private fun initComponents(view: View?) {
+        changeNameAndPassword = view?.findViewById(R.id.changeNameAndPassword);
         userName = view?.findViewById(R.id.user_name);
         userEmail = view?.findViewById(R.id.user_email);
         list = view?.findViewById(R.id.recently_played);
@@ -84,6 +87,11 @@ class AccountFragment : Fragment() {
 
         userName?.text = account?.name;
         userEmail?.text = account?.email;
+
+        changeNameAndPassword?.setOnClickListener {
+            val changeNameAndPasswordDialog = LayoutInflater.from(context).inflate(R.layout.dialog_update_name_password, null);
+            ChangeNameAndPasswordAlertDialog().with(context!!).view(changeNameAndPasswordDialog).show();
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -118,5 +126,80 @@ class AccountFragment : Fragment() {
         });
 
         UserManager.remove(context!!);
+    }
+
+    inner class ChangeNameAndPasswordAlertDialog {
+        private var dialogBuilder: AlertDialog.Builder? = null;
+        private var alertDialog: AlertDialog? = null;
+        private var context: Context? = null;
+        private var onProcess = false;
+
+        private lateinit var nameEditText: TextInputEditText;
+        private lateinit var passwordEditText: TextInputEditText;
+        private lateinit var confirm: Button;
+        private lateinit var cancel: Button;
+        private lateinit var createPlaylistLoading: ProgressBar;
+
+        private val volleyResponseListener = object : HttpRequestListeners.StringResponseListener {
+            override fun response(response: String?) {
+                userName?.text = nameEditText.text.toString();
+
+                alertDialog?.dismiss();
+            }
+
+            override fun error(er: String?, responseStatusCode: Int?) {
+                Toast.makeText(context, er, Toast.LENGTH_LONG).show();
+                onProcess = false;
+                createPlaylistLoading.visibility = View.INVISIBLE;
+            }
+        }
+
+        fun with(context: Context): ChangeNameAndPasswordAlertDialog {
+            this.context = context;
+
+            dialogBuilder = AlertDialog.Builder(context);
+
+            return this;
+        }
+
+        fun view(view: View): ChangeNameAndPasswordAlertDialog {
+            dialogBuilder?.setView(view);
+
+            prepareComponent(view);
+
+            return this;
+        }
+
+        fun show(): ChangeNameAndPasswordAlertDialog {
+            alertDialog = dialogBuilder?.create();
+            alertDialog?.show();
+
+            return this;
+        }
+
+        private fun prepareComponent(view: View) {
+            nameEditText = view.findViewById(R.id.name_edit_text);
+            passwordEditText = view.findViewById(R.id.password_edit_text);
+            confirm = view.findViewById(R.id.submit_button);
+            cancel = view.findViewById(R.id.cancel_button);
+            createPlaylistLoading = view.findViewById(R.id.create_playlist_confirm_loading);
+
+            confirm.setOnClickListener {
+                if (!onProcess) {
+
+                    createPlaylistLoading.visibility = View.VISIBLE;
+
+                    val name: String = nameEditText.text.toString();
+                    val password: String = passwordEditText.text.toString();
+                    API.Account.updateNameAndPassword(context!!, name, password, volleyResponseListener);
+
+                    onProcess = true;
+                }
+            }
+
+            cancel.setOnClickListener {
+                alertDialog?.dismiss();
+            }
+        }
     }
 }
