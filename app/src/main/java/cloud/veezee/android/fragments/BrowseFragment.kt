@@ -62,7 +62,6 @@ class BrowseFragment : Fragment() {
 
     };
 
-    //methods
     private fun updateList(resource: String?) {
         if(homePageItems.size > 0)
             homePageItems.clear();

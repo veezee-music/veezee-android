@@ -57,6 +57,7 @@ class PlayListOptionFragment : BottomSheetDialogFragment() {
             val track = Gson().fromJson(trackJson, Track::class.java);
             val playlist = albums[listPosition];
 
+            confirmButton.text = context?.getString(R.string.loading);
             API.Account.PlayLists.Track.add(context!!, track, playlist, addTrackToThePlaylistVolleyResponseListener);
         } else {
             // cancel
@@ -80,6 +81,10 @@ class PlayListOptionFragment : BottomSheetDialogFragment() {
 
         override fun response(response: String?) {
             dismiss();
+        }
+
+        override fun error(er: String?, responseStatusCode: Int?) {
+            confirmButton.text = context?.getString(R.string.confirm);
         }
 
     }

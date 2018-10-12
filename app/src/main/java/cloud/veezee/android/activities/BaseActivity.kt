@@ -574,7 +574,6 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun updateUIForColoredPlayer(colors: Color?) {
-
         val accentColor = android.graphics.Color.parseColor(colors?.accentColor);
         val primaryColor = android.graphics.Color.parseColor(colors?.primaryColor);
 

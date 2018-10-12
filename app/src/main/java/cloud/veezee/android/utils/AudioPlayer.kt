@@ -10,12 +10,15 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.*
 import android.support.v4.content.LocalBroadcastManager
+import android.util.Log
 import cloud.veezee.android.BuildConfig
 import cloud.veezee.android.Constants
 import cloud.veezee.android.application.App
 import cloud.veezee.android.models.PlayableItem
 import cloud.veezee.android.services.AudioService
 import com.google.gson.Gson
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class AudioPlayer {
 
@@ -45,7 +48,7 @@ class AudioPlayer {
             return INSTANCE!!;
         }
 
-        var originalSystemLockScreenWallpaper: Drawable? = null;
+        private var originalSystemLockScreenWallpaper: Drawable? = null;
 
         fun setLockScreenWallpaper(resource: Bitmap) {
             return;
@@ -53,18 +56,20 @@ class AudioPlayer {
                 return;
             }
 
-            Handler(Looper.getMainLooper()).post {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                doAsync {
                     val wallpaperManager = WallpaperManager.getInstance(App.instance);
                     if(wallpaperManager.isSetWallpaperAllowed) {
                         if(originalSystemLockScreenWallpaper == null) {
                             // requires external storage permission
                             originalSystemLockScreenWallpaper = wallpaperManager.drawable;
                         }
-                        wallpaperManager.setBitmap(resource, null, true, WallpaperManager.FLAG_LOCK);
+                        uiThread {
+                            wallpaperManager.setBitmap(resource, null, true, WallpaperManager.FLAG_LOCK);
+                        }
                     }
                 }
-            };
+            }
         }
 
         fun resetLockScreenWallpaper() {
@@ -73,11 +78,13 @@ class AudioPlayer {
                 return;
             }
 
-            Handler(Looper.getMainLooper()).post {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    val wallpaperManager = WallpaperManager.getInstance(App.instance);
-                    if(wallpaperManager.isSetWallpaperAllowed && originalSystemLockScreenWallpaper != null) {
-                        setLockScreenWallpaper(BitmapUtils.drawableToBitmap(originalSystemLockScreenWallpaper));
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                doAsync {
+                    uiThread {
+                        val wallpaperManager = WallpaperManager.getInstance(App.instance);
+                        if(wallpaperManager.isSetWallpaperAllowed && originalSystemLockScreenWallpaper != null) {
+                            setLockScreenWallpaper(BitmapUtils.drawableToBitmap(originalSystemLockScreenWallpaper));
+                        }
                     }
                 }
             }

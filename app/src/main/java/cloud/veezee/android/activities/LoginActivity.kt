@@ -355,7 +355,6 @@ class LoginActivity : AppCompatActivity() {
      * Show login dialog
      */
     private fun loginDialog(view: View) {
-
         dialog = createDialog(view);
 
         submit = view.findViewById(R.id.dialog_login_submit);
