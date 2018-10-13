@@ -52,7 +52,7 @@ class AlbumActivity : BaseActivity() {
         myAppbarLayout = album_app_bar_layout;
         root = album_root;
 
-        val albumJson = intent.extras.getString("album");
+        val albumJson = intent?.extras?.getString("album");
 
         album = Gson().fromJson(albumJson, Album::class.java);
 

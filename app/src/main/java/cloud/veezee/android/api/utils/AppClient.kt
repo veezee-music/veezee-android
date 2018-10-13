@@ -58,7 +58,7 @@ class AppClient(private val context: Context?) {
             override fun getHeaders(): Map<String, String> {
                 val headers = HashMap<String, String>();
                 headers.put("X-Requested-With", requestWith(context!!));
-                headers.put("Authorization", "Bearer ${userToken(context!!)}");
+                headers.put("Authorization", "Bearer ${userToken(context)}");
 
                 return headers
             }

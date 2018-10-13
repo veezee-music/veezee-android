@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_home_page_content.*
 import kotlinx.android.synthetic.main.content_player.*
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.graphics.drawable.DrawableCompat
+import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.*
 import cloud.veezee.android.Constants
@@ -46,6 +47,8 @@ import cloud.veezee.android.models.SettingModel
 import cloud.veezee.android.services.AudioService
 import cloud.veezee.android.utils.*
 import cloud.veezee.android.utils.UserManager
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.json.JSONObject
 
 open class BaseActivity : AppCompatActivity() {
@@ -101,8 +104,18 @@ open class BaseActivity : AppCompatActivity() {
             playerArtWork?.setImageBitmap(resource);
 
             if (Constants.COLORED_PLAYER) {
-                val task = SetBlurredArtWork();
-                task.execute(resource);
+                doAsync {
+                    var drawable: Drawable? = null;
+                    try {
+                        drawable = ImageUtils.createBlurredImageFromBitmap(resource, applicationContext, 9);
+                    } catch (e: Exception) { }
+
+                    uiThread {
+                        if (drawable != null) {
+                            blurBackground?.setImageDrawable(drawable);
+                        }
+                    }
+                }
 
                 AudioPlayer.setLockScreenWallpaper(resource);
             }
@@ -246,7 +259,7 @@ open class BaseActivity : AppCompatActivity() {
 
     private val onVolumeSeekChangeListener = object : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-            audioManager?.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0)
+            audioManager?.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -432,6 +445,11 @@ open class BaseActivity : AppCompatActivity() {
     fun openBottomPlayer() {
         if (slidingLayout?.panelState == SlidingUpPanelLayout.PanelState.HIDDEN) {
             collapsePanel();
+            Handler().postDelayed({
+                if(slidingLayout?.panelState != SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    collapsePanel();
+                }
+            }, 1000);
         }
     }
 
@@ -824,27 +842,6 @@ open class BaseActivity : AppCompatActivity() {
                         changePlayButtonState(BaseActivity.FLAG_PLAY);
                     }
                 }
-            }
-        }
-    }
-
-    inner class SetBlurredArtWork : AsyncTask<Bitmap, Void, Drawable>() {
-        override fun doInBackground(vararg params: Bitmap?): Drawable? {
-            var drawable: Drawable? = null;
-            try {
-                drawable = ImageUtils.createBlurredImageFromBitmap(params[0], applicationContext, 9);
-            } catch (e: Exception) {
-                e.printStackTrace();
-            }
-
-            return drawable;
-        }
-
-        override fun onPostExecute(result: Drawable?) {
-            super.onPostExecute(result)
-
-            if (result != null) {
-                blurBackground?.setImageDrawable(result);
             }
         }
     }

@@ -13,10 +13,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import cloud.veezee.android.adapters.ChoosePlaylistVerticalAdapter
@@ -81,10 +78,12 @@ class PlayListOptionFragment : BottomSheetDialogFragment() {
 
         override fun response(response: String?) {
             dismiss();
+            Toast.makeText(context, "Added to your playlist.", Toast.LENGTH_SHORT).show();
         }
 
         override fun error(er: String?, responseStatusCode: Int?) {
             confirmButton.text = context?.getString(R.string.confirm);
+            Toast.makeText(context, er, Toast.LENGTH_LONG).show();
         }
 
     }

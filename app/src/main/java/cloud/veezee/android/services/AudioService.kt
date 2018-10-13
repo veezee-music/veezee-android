@@ -203,6 +203,11 @@ class AudioService : Service() {
     }
 
     private val exoPlayerListener = object : Player.EventListener {
+
+        override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {
+
+        }
+
         override fun onSeekProcessed() {
 
         }
@@ -268,8 +273,6 @@ class AudioService : Service() {
             }
         }
 
-        override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
-        }
     }
 
     private val updateProgressAction = object : Runnable {
@@ -387,7 +390,7 @@ class AudioService : Service() {
     }
 
     private fun repeat() {
-        player?.repeatMode = if(player?.repeatMode == 1) 0 else 1;
+        player?.repeatMode = if(player?.repeatMode == Player.REPEAT_MODE_ONE) Player.REPEAT_MODE_OFF else Player.REPEAT_MODE_ONE;
     }
 
     private fun seekTo(position: Int) {
@@ -472,7 +475,6 @@ class AudioService : Service() {
     }
 
     private fun initMediaSource(resources: ArrayList<String>): MediaSource {
-
         val mHandler = Handler();
         val userAgent = Util.getUserAgent(this, getString(R.string.app_name));
 
@@ -484,7 +486,8 @@ class AudioService : Service() {
             val resource = resources[i];
             var dataSource: DataSource.Factory? = null;
             dataSource = defaultDataSourceFactory;
-            mediaSourcesToLoad.add(ExtractorMediaSource(Uri.parse(resource), dataSource, DefaultExtractorsFactory(), mHandler, null));
+            mediaSourcesToLoad.add(ExtractorMediaSource.Factory(dataSource).createMediaSource(Uri.parse(resource), mHandler, null));
+            //mediaSourcesToLoad.add(ExtractorMediaSource(Uri.parse(resource), dataSource, DefaultExtractorsFactory(), mHandler, null));
         }
 
         val dynamicConcatenatingMediaSource = DynamicConcatenatingMediaSource();
