@@ -104,8 +104,7 @@ class HomePageActivity : BaseActivity() {
 
         val upgradeButton = view.findViewById<Button>(R.id.upgrade_button);
 
-        dialog.setView(view)
-                .setCancelable(false);
+        dialog.setView(view).setCancelable(false);
         val createDialog = dialog.create();
         createDialog.show();
 
@@ -147,14 +146,15 @@ class HomePageActivity : BaseActivity() {
                     view.findViewById<TextView>(R.id.tab_title).text = "Account";
                 }
             }
+
             tab_layout?.getTabAt(i)?.customView = view;
+
             tab_layout?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabReselected(tab: TabLayout.Tab?) {
 
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
-
                     when (tab?.position) {
                         0 -> {
                             lastFragmentSelected = Fragments.BROWSE;
@@ -167,7 +167,6 @@ class HomePageActivity : BaseActivity() {
                             lastFragmentSelected = Fragments.ACCOUNT;
                         }
                     }
-
                 }
 
                 override fun onTabSelected(tab: TabLayout.Tab?) {

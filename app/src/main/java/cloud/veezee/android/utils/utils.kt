@@ -43,9 +43,9 @@ fun mkDirs(path: String?): Boolean {
 
 fun isOnline(context: Context?): Boolean {
     val cm: ConnectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager;
-    val netWorkInformation = cm.activeNetworkInfo;
+    val networkInformation = cm.activeNetworkInfo;
 
-    return netWorkInformation != null && netWorkInformation.isConnectedOrConnecting;
+    return networkInformation != null && networkInformation.isConnectedOrConnecting;
 }
 
 fun <T> View.contentReadyToShow(show: Boolean, loading: T?) {

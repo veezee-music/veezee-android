@@ -3,10 +3,11 @@ package cloud.veezee.android.models
 class HomePageItem {
 
     companion object {
-        const val ALBUM = "Album";
+        const val ALBUM = "Album"
         const val TRACK = "Track"
         const val HEADER = "Header"
         const val GENRE = "Genre"
+        const val COMPACT_ALBUM = "CompactAlbum"
     }
 
     var  type: String? = null;

@@ -186,7 +186,6 @@ class AccountFragment : Fragment() {
 
             confirm.setOnClickListener {
                 if (!onProcess) {
-
                     createPlaylistLoading.visibility = View.VISIBLE;
 
                     val name: String = nameEditText.text.toString();

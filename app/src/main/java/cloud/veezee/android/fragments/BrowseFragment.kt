@@ -45,13 +45,11 @@ class BrowseFragment : Fragment() {
 
     private val offlinePlayListListener = object : OfflinePlayListResponseListener {
         override fun response(resource: String) {
-
             updateList(resource);
         }
     }
 
     private val volleyResponseListener = object : HttpRequestListeners.StringResponseListener {
-
         override fun response(response: String?) {
             if(response == null)
                 return;
@@ -59,7 +57,6 @@ class BrowseFragment : Fragment() {
             cache?.cacheHomePageContent(response);
             updateList(response);
         }
-
     };
 
     private fun updateList(resource: String?) {
@@ -92,7 +89,6 @@ class BrowseFragment : Fragment() {
         return true;
     }
 
-    //override
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View? = inflater.inflate(R.layout.fragment_browse, container, false);
         setHasOptionsMenu(true);

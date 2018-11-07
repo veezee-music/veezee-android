@@ -31,7 +31,6 @@ class BrowseVerticalListAdapter(private val context: Context, private val list: 
     private fun centerZoomLayoutManager(orientation: Int): CenterZoomLayoutManager = CenterZoomLayoutManager(context, orientation, false);
 
     private fun getLayoutManager(position: Int): RecyclerView.LayoutManager {
-
         val type = list[position].type;
 
         return when (type) {
@@ -45,6 +44,7 @@ class BrowseVerticalListAdapter(private val context: Context, private val list: 
                 val tracksSize = list[position].trackList?.size!!;
                 gridLayoutManager(if (Constants.OFFLINE_ACCESS) { if(tracksSize < 4) tracksSize else 4  } else {3}, GridLayoutManager.HORIZONTAL)
             }
+            HomePageItem.COMPACT_ALBUM -> linearLayoutManager(LinearLayoutManager.VERTICAL)
             else -> {
                 linearLayoutManager(LinearLayoutManager.HORIZONTAL);
             }
@@ -52,7 +52,6 @@ class BrowseVerticalListAdapter(private val context: Context, private val list: 
     }
 
     private fun hasSnapHelper(type: String): Boolean {
-
         return when (type) {
             HomePageItem.ALBUM -> true;
             HomePageItem.HEADER -> true;
@@ -87,7 +86,6 @@ class BrowseVerticalListAdapter(private val context: Context, private val list: 
     override fun getItemCount(): Int = list.size;
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         val homePageItem: HomePageItem = list[position];
         val title = homePageItem.title;
         val type = homePageItem.type;
@@ -101,8 +99,9 @@ class BrowseVerticalListAdapter(private val context: Context, private val list: 
             headerContainer.visibility = if (title == null) View.GONE else View.VISIBLE;
             headerTitle.text = title ?: "";
 
-            if (type == HomePageItem.GENRE)
+            if (type == HomePageItem.GENRE || type == HomePageItem.COMPACT_ALBUM) {
                 moreResult.visibility = View.GONE;
+            }
 
             initializeLists(holder.adapterPosition, list);
 

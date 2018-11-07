@@ -7,7 +7,7 @@ import java.io.File
 class Constants {
     companion object {
         const val API_BASE_URL = "https://veezee.cloud/api/v1";
-        const val GUEST_MODE = false;
+        const val GUEST_MODE = true;
 
         var COLORED_PLAYER = true
             set(value) {

@@ -76,7 +76,7 @@ class AudioService : Service() {
     private var albumArtwork: Bitmap? = null;
     private var placeHolder: Bitmap? = null;
 
-    //notifications
+    // notifications
     private var notificationCompat: NotificationCompat.Builder? = null;
     private var session: MediaSessionCompat? = null;
     private var state: PlaybackStateCompat.Builder? = null;
@@ -424,7 +424,6 @@ class AudioService : Service() {
     }
 
     private fun updateMetaData() {
-
         val index = player!!.currentWindowIndex;
         if (index < playList?.size!!) {
             artwork = placeHolder;
@@ -440,7 +439,6 @@ class AudioService : Service() {
     }
 
     private fun resourceExtractor(jsonPlayList: String?): ArrayList<String> {
-
         val playList: ArrayList<PlayableItem> = Gson().fromJson(jsonPlayList, object : TypeToken<ArrayList<PlayableItem>>() {}.type);
         this.playList = playList;
         val resources: ArrayList<String> = ArrayList();
@@ -452,7 +450,6 @@ class AudioService : Service() {
 
 
     private fun getHttpDataSourceFactory(userAgent: String): DefaultHttpDataSourceFactory {
-
         return DefaultHttpDataSourceFactory(
                 userAgent, exoTransferListener,
                 DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
@@ -460,14 +457,12 @@ class AudioService : Service() {
     }
 
     private fun getDefaultDataSourceFactory(userAgent: String): DefaultDataSourceFactory {
-
         return DefaultDataSourceFactory(
                 context,
                 userAgent, exoTransferListener);
     }
 
     private fun getCacheDataSourceFactory(dataSourceFactory: DefaultHttpDataSourceFactory): CacheDataSourceFactory {
-
         val cache = SimpleCache(File(Constants.DIRECTORY, " cache"), LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE));
         val cacheFlags = CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR or CacheDataSource.FLAG_BLOCK_ON_CACHE;
 
@@ -519,7 +514,6 @@ class AudioService : Service() {
     }
 
     private fun generateNotification(): Notification? {
-
         if (artwork != null && artwork?.isRecycled!!)
             artwork = null; //unfortunately bitmap recycled, show the placeholder
 
@@ -592,7 +586,6 @@ class AudioService : Service() {
     }
 
     private fun mediaSession(): MediaSessionCompat {
-
         val mediaButtonReceiver = ComponentName(applicationContext, MediaButtonReceiver::class.java)
 
         val mSession = MediaSessionCompat(this, "mSession", mediaButtonReceiver, null)
