@@ -54,13 +54,6 @@
 - Beautiful animations and transitions
 - And more...
 
-## Things that ARE planned
-
-- Complete user accounts VC
-- More themes
-- More animations
-- BUG FIXES!
-
 ## Things that are currently NOT planned
 
 - Supporting devices with smaller screens (Minimum for Android is 5 inches)
