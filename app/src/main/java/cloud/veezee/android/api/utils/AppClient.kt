@@ -50,7 +50,6 @@ class AppClient(private val context: Context?) {
     }
 
     fun customJsonObjectRequest(url: String, method: Int, params: JSONObject? = null, listener: HttpRequestListeners.StringResponseListener?) {
-
         stringListeners = listener;
 
         val req = object : CustomJsonObjectRequest(method, url, params, stringResponseListener, errorListener) {
@@ -79,7 +78,6 @@ class AppClient(private val context: Context?) {
     }
 
     private fun trimMessage(msg: String): String? {
-
         return try {
             val errorBody = JSONObject(msg);
             if (errorBody.has(ERROR))
@@ -93,21 +91,25 @@ class AppClient(private val context: Context?) {
     }
 
     private fun handleVolleyErrors(er: VolleyError): Array<Any> {
-        val networkResponse = er.networkResponse;
-        val statusCode = networkResponse.statusCode;
+        try {
+            val networkResponse = er.networkResponse;
+            val statusCode = networkResponse.statusCode;
 
-        val data = networkResponse?.data;
+            val data = networkResponse?.data;
 
-        if (data != null) {
-            val jsonData = JSONObject(String(networkResponse.data, Charset.defaultCharset()));
+            if (data != null) {
+                val jsonData = JSONObject(String(networkResponse.data, Charset.defaultCharset()));
 
-            if(jsonData.has("error")) {
-                return arrayOf(jsonData.getString("error"), statusCode);
+                if(jsonData.has("error")) {
+                    return arrayOf(jsonData.getString("error"), statusCode);
+                } else {
+                    return arrayOf("Unknown error. Please try again.", statusCode);
+                }
             } else {
-                return arrayOf("Unknown error. Please try again.", statusCode);
+                return arrayOf("System error. Please try again.", statusCode);
             }
-        } else {
-            return arrayOf("System error. Please try again.", statusCode);
+        } catch (e: Exception) {
+            return arrayOf("Unknown error. Please try again.", 500);
         }
     }
 }

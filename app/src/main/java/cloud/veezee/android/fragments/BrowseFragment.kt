@@ -25,9 +25,11 @@ import cloud.veezee.android.externalComponentsAndLibs.NestedScrollingParentRecyc
 import cloud.veezee.android.utils.interfaces.OfflinePlayListResponseListener
 import cloud.veezee.android.models.PlayableItem
 import cloud.veezee.android.R
+import cloud.veezee.android.activities.LoginActivity
 import cloud.veezee.android.utils.*
 import kotlinx.android.synthetic.main.activity_home_page.*
 import org.json.JSONObject
+import java.lang.Exception
 
 class BrowseFragment : Fragment() {
 
@@ -119,6 +121,17 @@ class BrowseFragment : Fragment() {
         return view;
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu);
+
+        try {
+            if(Constants.GUEST_MODE == true) {
+                val loginItem = menu?.findItem(R.id.login);
+                loginItem?.isVisible = true;
+            }
+        } catch (ignored: Exception) { }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater);
 
@@ -132,6 +145,11 @@ class BrowseFragment : Fragment() {
             R.id.setting -> {
                 val settingActivity = Intent(context, SettingActivity::class.java);
                 startActivity(settingActivity);
+            }
+            R.id.login -> {
+                Constants.GUEST_MODE = null;
+                val loginActivity = Intent(context, LoginActivity::class.java);
+                startActivity(loginActivity);
             }
         }
 

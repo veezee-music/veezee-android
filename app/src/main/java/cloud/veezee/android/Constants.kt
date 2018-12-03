@@ -7,7 +7,17 @@ import java.io.File
 class Constants {
     companion object {
         const val API_BASE_URL = "https://veezee.cloud/api/v1";
-        const val GUEST_MODE = true;
+
+        var GUEST_MODE: Boolean? = null
+            set(value) {
+                field = value;
+
+                if(value == null) {
+                    SharedPreferencesHelper(App.instance).delete("GUEST_MODE");
+                } else {
+                    SharedPreferencesHelper(App.instance).save("GUEST_MODE", value);
+                }
+            };
 
         var COLORED_PLAYER = true
             set(value) {

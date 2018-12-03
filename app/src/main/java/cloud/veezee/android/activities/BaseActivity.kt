@@ -634,7 +634,7 @@ open class BaseActivity : AppCompatActivity() {
         LocalBroadcastManager.getInstance(context).registerReceiver(settingChangedReceiver, IntentFilter(Constants.SETTINGS_CHANGED_NOTIFICATION_ID));
         LocalBroadcastManager.getInstance(context).registerReceiver(metaDataReceiver, IntentFilter(AudioPlayer.ACTION_META_DATA));
 
-        if (now() > App.autoLoginSessionExpireDate && !Constants.GUEST_MODE)
+        if (now() > App.autoLoginSessionExpireDate && Constants.GUEST_MODE == false)
             checkUserLogin();
 
 //        if(!checkPermissionForReadExtertalStorage()) {
@@ -677,6 +677,9 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun loadPreferences() {
+        if(SharedPreferencesHelper(this).exist("GUEST_MODE")) {
+            Constants.GUEST_MODE = SharedPreferencesHelper(this).getBoolean("GUEST_MODE", false);
+        }
         Constants.COLORED_PLAYER = SharedPreferencesHelper(this).getBoolean("COLORED_PLAYER", Constants.COLORED_PLAYER);
         Constants.OFFLINE_ACCESS = SharedPreferencesHelper(this).getBoolean("OFFLINE_ACCESS", Constants.OFFLINE_ACCESS);
         Constants.THEME = Theme.valueOf(SharedPreferencesHelper(this).getString("THEME", Constants.THEME.value));

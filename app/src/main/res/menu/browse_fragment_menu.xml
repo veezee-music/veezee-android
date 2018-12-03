@@ -3,8 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/login"
+        android:title="Log In"
+        android:icon="@drawable/ic_person_24dp"
+        app:showAsAction="always"
+        android:visible="false" />
+
+    <item
         android:id="@+id/setting"
         android:title="Settings"
         android:icon="@drawable/ic_settings"
         app:showAsAction="always" />
+
 </menu>

@@ -100,18 +100,23 @@ class LoginActivity : AppCompatActivity() {
         }
 
         override fun onAnimationEnd(animation: Animation?) {
-            if(!Constants.GUEST_MODE) {
-                if (user!!.isLoggedIn) {
-                    if (!isOnline(context)) {
-                        readyToLaunchOfflineMode();
+            if(Constants.GUEST_MODE != null) {
+                if(Constants.GUEST_MODE == false) {
+                    if (user!!.isLoggedIn) {
+                        if (!isOnline(context)) {
+                            readyToLaunchOfflineMode();
+                        } else {
+                            validateLogin();
+                        }
                     } else {
-                        validateLogin();
+                        entryAnimation(800);
                     }
                 } else {
-                    entryAnimation(800);
+                    redirectToMainPage(800);
                 }
             } else {
-                redirectToMainPage(800);
+                entryAnimation(0);
+                //logout();
             }
         }
 
@@ -125,7 +130,17 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_content);
 
+        val guestLogin = findViewById<TextView>(R.id.guest_login);
+        guestLogin.setOnClickListener {
+            logout();
+            Constants.GUEST_MODE = true;
+            redirectToMainPage(1);
+        }
+
         //Constants.OFFLINE_ACCESS = !isOnline(context);
+        if(SharedPreferencesHelper(this).exist("GUEST_MODE")) {
+            Constants.GUEST_MODE = SharedPreferencesHelper(this).getBoolean("GUEST_MODE", false);
+        }
 
         user = UserManager.get(context);
         initComponents();
@@ -206,8 +221,10 @@ class LoginActivity : AppCompatActivity() {
                 user.loginWith = UserManager.Account.CUSTOM;
                 user.set(context);
 
+                Constants.GUEST_MODE = false;
+
                 App.autoLoginSessionExpireDate = now();
-                redirectToMainPage(1000);
+                redirectToMainPage(800);
             }
 
             override fun error(er: String?, responseStatusCode: Int?) {
@@ -254,8 +271,10 @@ class LoginActivity : AppCompatActivity() {
                 user.loginWith = UserManager.get(context).loginWith;
                 user.set(context);
 
+                Constants.GUEST_MODE = false;
+
                 App.autoLoginSessionExpireDate = now();
-                redirectToMainPage(1000);
+                redirectToMainPage(800);
             }
 
             override fun error(er: String?, responseStatusCode: Int?) {
@@ -264,8 +283,9 @@ class LoginActivity : AppCompatActivity() {
 
                 mainLoading?.visibility = View.INVISIBLE;
                 if (responseStatusCode == 410 || responseStatusCode == 500) {
-                    entryAnimation(2000);
+                    entryAnimation(800);
                     logout();
+                    Constants.GUEST_MODE = null;
                 } else {
                     showFailedButtons();
                 }
@@ -289,8 +309,10 @@ class LoginActivity : AppCompatActivity() {
                     user.loginWith = UserManager.Account.GOOGLE;
                     user.set(context);
 
+                    Constants.GUEST_MODE = false;
+
                     App.autoLoginSessionExpireDate = now();
-                    redirectToMainPage(1000);
+                    redirectToMainPage(800);
                 }
 
                 override fun error(er: String?, responseStatusCode: Int?) {
@@ -316,13 +338,16 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        googleSignInHelper?.signOut(object : GoogleSignOutListener {
-            override fun onCompleted() {
-                UserManager.remove(context);
-                return;
-            }
-        });
-        UserManager.remove(context);
+        try {
+            googleSignInHelper?.signOut(object : GoogleSignOutListener {
+                override fun onCompleted() {
+                    UserManager.remove(context);
+
+                    return;
+                }
+            });
+            UserManager.remove(context);
+        } catch (e: Exception) { }
     }
 
     /**
@@ -402,7 +427,7 @@ class LoginActivity : AppCompatActivity() {
 
     /**
      *
-     * Translate Veezee's logo to the top of the screen to show login dialog
+     * Translate veezee's logo to the top of the screen to show login dialog
      *
      */
     private fun entryAnimation(delay: Long, duration: Long = 1000) {
@@ -482,7 +507,6 @@ class LoginActivity : AppCompatActivity() {
 
         object : CountDownTimer(delay, delay) {
             override fun onFinish() {
-
                 dialog?.dismiss();
 
                 startActivity(homePageActivity);

@@ -284,7 +284,7 @@ class HomePageActivity : BaseActivity() {
         }
 
         override fun getCount(): Int {
-            return if(Constants.GUEST_MODE) {
+            return if(Constants.GUEST_MODE == true) {
                 2
             } else  {
                 3

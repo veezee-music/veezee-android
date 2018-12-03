@@ -74,7 +74,7 @@ class AlbumVerticalListAdapter(var album: Album, var context: Context) : Recycle
                 if(track.album == null)
                     track.album = cloneAlbum();
 
-                if(Constants.GUEST_MODE)
+                if(Constants.GUEST_MODE == true)
                     view?.findViewById<Button>(R.id.dialog_menu_add)?.visibility = View.GONE;
 
                 TrackMenu().with(context)

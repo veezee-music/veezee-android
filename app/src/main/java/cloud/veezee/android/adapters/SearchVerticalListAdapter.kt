@@ -171,7 +171,7 @@ class SearchVerticalListAdapter(val context: Context, private val searchItems: A
 
                     val view = LayoutInflater.from(context).inflate(R.layout.dialog_track_menu, null);
 
-                    if (Constants.GUEST_MODE)
+                    if (Constants.GUEST_MODE == true)
                         view?.findViewById<Button>(R.id.dialog_menu_add)?.visibility = View.GONE;
 
                     TrackMenu().with(context)

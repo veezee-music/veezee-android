@@ -10,6 +10,7 @@
     <string name="login_google">Login with Google</string>
     <string name="login">Login</string>
     <string name="register">Create new account</string>
+    <string name="guest_login">Guest Login</string>
     <string name="create_playlist">Create new Playlist</string>
 
     <string name="google_error">Google sign in is not available right now. Please use email to sign in/sign up.</string>
