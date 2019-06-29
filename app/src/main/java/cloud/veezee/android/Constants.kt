@@ -6,7 +6,7 @@ import java.io.File
 
 class Constants {
     companion object {
-        const val API_BASE_URL = "https://veezee.cloud/api/v1";
+        const val API_BASE_URL = "https://veezee.ir/api/v1";
 
         var GUEST_MODE: Boolean? = null
             set(value) {

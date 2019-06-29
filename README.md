@@ -80,7 +80,7 @@ You'll need to use **Android Studio**.
 
 The server can be set up either on the localhost or the Internet. This server's address must be specified in the `Constants.kt` file in the Android application's project code.
 
-*`https://veezee.cloud/api/v1/` is a demo API limited in functionaliity (registrations not allowed) that can be used to understand the apps behavior. **It contains some music and image files that exist for educational purposes only! No profit is gained from them. Its content may not be used in any way that may violate any copyright laws.** This server does not have powerful hardware and network connectivity and is expected to be slow and unresponsive at times.*
+*`https://veezee.ir/api/v1/` is a demo API limited in functionaliity (registrations not allowed) that can be used to understand the apps behavior. **It contains some music and image files that exist for educational purposes only! No profit is gained from them. Its content may not be used in any way that may violate any copyright laws.** This server does not have powerful hardware and network connectivity and is expected to be slow and unresponsive at times.*
 
 
 **For more information about the server application please visit [here](https://github.com/veezee-music/veezee-server-example).**
