@@ -13,19 +13,19 @@
 <br>
 
 <p align="center">
-  <a href="http://veezee.ir/demo_assets/android/p1.png" target="_blank"><img width="32%" src="http://veezee.ir/demo_assets/android/p1.png"></a>
-  <a href="http://veezee.ir/demo_assets/android/p2.png" target="_blank"><img width="32%" src="http://veezee.ir/demo_assets/android/p2.png"></a>
-  <a href="http://veezee.ir/demo_assets/android/p3.png" target="_blank"><img width="32%" src="http://veezee.ir/demo_assets/android/p3.png"></a>
+  <a href="https://veezee-music.github.io/veezee-static-contents/brand/android/p1.png" target="_blank"><img width="32%" src="https://veezee-music.github.io/veezee-static-contents/brand/android/p1.png"></a>
+  <a href="https://veezee-music.github.io/veezee-static-contents/brand/android/p2.png" target="_blank"><img width="32%" src="https://veezee-music.github.io/veezee-static-contents/brand/android/p2.png"></a>
+  <a href="https://veezee-music.github.io/veezee-static-contents/brand/android/p3.png" target="_blank"><img width="32%" src="https://veezee-music.github.io/veezee-static-contents/brand/android/p3.png"></a>
 </p>
 <p align="center">
-  <a href="http://veezee.ir/demo_assets/android/p4.png" target="_blank"><img width="32%" src="http://veezee.ir/demo_assets/android/p4.png"></a>
-  <a href="http://veezee.ir/demo_assets/android/p5.png" target="_blank"><img width="32%" src="http://veezee.ir/demo_assets/android/p5.png"></a>
-  <a href="http://veezee.ir/demo_assets/android/p6.png" target="_blank"><img width="32%" src="http://veezee.ir/demo_assets/android/p6.png"></a>
+  <a href="https://veezee-music.github.io/veezee-static-contents/brand/android/p4.png" target="_blank"><img width="32%" src="https://veezee-music.github.io/veezee-static-contents/brand/android/p4.png"></a>
+  <a href="https://veezee-music.github.io/veezee-static-contents/brand/android/p5.png" target="_blank"><img width="32%" src="https://veezee-music.github.io/veezee-static-contents/brand/android/p5.png"></a>
+  <a href="https://veezee-music.github.io/veezee-static-contents/brand/android/p6.png" target="_blank"><img width="32%" src="https://veezee-music.github.io/veezee-static-contents/brand/android/p6.png"></a>
 </p>
 <p align="center">
-  <a href="http://veezee.ir/demo_assets/android/p7.png" target="_blank"><img width="32%" src="http://veezee.ir/demo_assets/android/p7.png"></a>
-  <a href="http://veezee.ir/demo_assets/android/p8.png" target="_blank"><img width="32%" src="http://veezee.ir/demo_assets/android/p8.png"></a>
-  <a href="http://veezee.ir/demo_assets/android/p9.png" target="_blank"><img width="32%" src="http://veezee.ir/demo_assets/android/p9.png"></a>
+  <a href="https://veezee-music.github.io/veezee-static-contents/brand/android/p7.png" target="_blank"><img width="32%" src="https://veezee-music.github.io/veezee-static-contents/brand/android/p7.png"></a>
+  <a href="https://veezee-music.github.io/veezee-static-contents/brand/android/p8.png" target="_blank"><img width="32%" src="https://veezee-music.github.io/veezee-static-contents/brand/android/p8.png"></a>
+  <a href="https://veezee-music.github.io/veezee-static-contents/brand/android/p9.png" target="_blank"><img width="32%" src="https://veezee-music.github.io/veezee-static-contents/brand/android/p9.png"></a>
 </p>
 
 
