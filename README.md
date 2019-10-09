@@ -1,7 +1,7 @@
 # veezee - music streamer (Android)
 
 <p align="center">
-	<img width="50%" src="http://veezee.ir/demo_assets/veezee-logotype.svg">
+	<img width="50%" src="https://veezee-music.github.io/veezee-static-contents/brand/veezee-logotype.svg">
 </p>
 <br>
 
