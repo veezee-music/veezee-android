@@ -38,34 +38,27 @@ class SettingActivity : BaseActivity() {
     }
 
     private fun prepareList(): ArrayList<SettingModel> {
-
         val models: ArrayList<SettingModel> = ArrayList();
-        var model: SettingModel? = null;
 
-        for (i in 0..2) {
-            when(i) {
-                0 -> {
-                    model = SettingModel(SettingModel.ViewType.TEXT);
-                    model.itemType = SettingModel.ItemType.THEME;
-                    model.title = "Theme";
-                    model.icon = R.drawable.ic_palette;
-                }
-                1 -> {
-                    model = SettingModel(SettingModel.ViewType.SWITCH);
-                    model.itemType = SettingModel.ItemType.OFFLINE_ACCESS;
-                    model.title = "Offline Access";
-                    model.icon = R.drawable.ic_cached;
-                }
-                2 -> {
-                    model = SettingModel(SettingModel.ViewType.SWITCH);
-                    model.itemType = SettingModel.ItemType.COLORED_PLAYER;
-                    model.title = "Colored Player";
-                    model.icon = R.drawable.ic_invert_colors;
-                }
-            }
-
-            models.add(model!!);
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.P) {
+            val model1 = SettingModel(SettingModel.ViewType.TEXT);
+            model1.itemType = SettingModel.ItemType.THEME;
+            model1.title = "Theme";
+            model1.icon = R.drawable.ic_palette;
+            models.add(model1);
         }
+
+        val model2 = SettingModel(SettingModel.ViewType.SWITCH);
+        model2.itemType = SettingModel.ItemType.OFFLINE_ACCESS;
+        model2.title = "Offline Access";
+        model2.icon = R.drawable.ic_cached;
+        models.add(model2);
+
+        val model3 = SettingModel(SettingModel.ViewType.SWITCH);
+        model3.itemType = SettingModel.ItemType.COLORED_PLAYER;
+        model3.title = "Colored Player";
+        model3.icon = R.drawable.ic_invert_colors;
+        models.add(model3);
 
         return models;
     }

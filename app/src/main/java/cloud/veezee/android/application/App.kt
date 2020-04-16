@@ -1,11 +1,11 @@
 package cloud.veezee.android.application
 
 import android.app.Application
-import io.fabric.sdk.android.Fabric
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.answers.Answers
+import android.content.res.Configuration
+import cloud.veezee.android.Constants
+import cloud.veezee.android.Theme
+import java.lang.Exception
 import java.util.*
-
 
 class App : Application() {
 
@@ -24,14 +24,18 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate();
+
         instance = this;
 
         try {
-            val fabric = Fabric.Builder(this)
-                    .kits(Answers(), Crashlytics())
-                    .build();
-            Fabric.with(fabric);
-
+            val mode = this.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
+            when (mode) {
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    Constants.THEME = Theme.BLACK
+                }
+                Configuration.UI_MODE_NIGHT_NO -> {}
+                Configuration.UI_MODE_NIGHT_UNDEFINED -> {}
+            }
         } catch (e: Exception) {
 
         }

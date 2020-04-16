@@ -4,14 +4,18 @@ import android.app.*
 import android.content.*
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color.*
+import android.graphics.Color.parseColor
 import android.media.AudioManager
+import android.media.MediaDescription
+import android.media.MediaMetadata
 import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.*
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaButtonReceiver
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -20,13 +24,22 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import android.util.Patterns
 import cloud.veezee.android.Constants
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
+import cloud.veezee.android.R
+import cloud.veezee.android.activities.HomePageActivity
+import cloud.veezee.android.application.GlideApp
 import cloud.veezee.android.models.PlayableItem
 import cloud.veezee.android.utils.AudioPlayer
+import cloud.veezee.android.utils.Couchbase
+import cloud.veezee.android.utils.VeezeeCache
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.*
+import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
+import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.*
@@ -38,15 +51,8 @@ import com.google.android.exoplayer2.util.Util
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
-import cloud.veezee.android.activities.HomePageActivity
-import cloud.veezee.android.application.App
-import cloud.veezee.android.utils.VeezeeCache
-import cloud.veezee.android.utils.Couchbase
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.collections.ArrayList
-import cloud.veezee.android.R
-import cloud.veezee.android.application.GlideApp
 
 class AudioService : Service() {
 
@@ -78,7 +84,8 @@ class AudioService : Service() {
 
     // notifications
     private var notificationCompat: NotificationCompat.Builder? = null;
-    private var session: MediaSessionCompat? = null;
+    private var mediaSession: MediaSessionCompat? = null;
+    private var mediaSessionConnector: MediaSessionConnector? = null;
     private var state: PlaybackStateCompat.Builder? = null;
     private var notificationManager: NotificationManager? = null;
 
@@ -101,16 +108,17 @@ class AudioService : Service() {
         }
     }
 
-    private val exoTransferListener = object : TransferListener<DataSource> {
-
-        override fun onTransferStart(source: DataSource?, dataSpec: DataSpec?) {
-
+    private val exoTransferListener = object : TransferListener {
+        override fun onTransferInitializing(source: DataSource?, dataSpec: DataSpec?, isNetwork: Boolean) {
         }
 
-        override fun onBytesTransferred(source: DataSource?, bytesTransferred: Int) {
+        override fun onTransferStart(source: DataSource?, dataSpec: DataSpec?, isNetwork: Boolean) {
         }
 
-        override fun onTransferEnd(source: DataSource?) {
+        override fun onBytesTransferred(source: DataSource?, dataSpec: DataSpec?, isNetwork: Boolean, bytesTransferred: Int) {
+        }
+
+        override fun onTransferEnd(source: DataSource?, dataSpec: DataSpec?, isNetwork: Boolean) {
             val playableItem = playList?.get(player!!.currentWindowIndex);
             val url = playableItem?.fileName;
 
@@ -320,7 +328,6 @@ class AudioService : Service() {
     }
 
     private fun currentTrackMetaDataBundleFactory(): Bundle {
-
         val index = player!!.currentWindowIndex;
 
         val b = Bundle();
@@ -343,8 +350,9 @@ class AudioService : Service() {
     }
 
     private fun releasePlayer() {
-        player?.stop();
+//        player?.stop();
         player?.release();
+        player = null;
     }
 
     private fun startPlayer() {
@@ -356,7 +364,6 @@ class AudioService : Service() {
     }
 
     private fun stopPlayer() {
-
         val bundle = Bundle();
         bundle.putBoolean("isPlay", false);
         bundle.putInt("playerState", Player.STATE_ENDED);
@@ -425,10 +432,12 @@ class AudioService : Service() {
 
     private fun updateMetaData() {
         val index = player!!.currentWindowIndex;
+        val playableItem = playList?.get(player!!.currentWindowIndex);
+
         if (index < playList?.size!!) {
             artwork = placeHolder;
-            GlideApp.with(context).asBitmap().load(playList!![index].imageUrl).into(simpleGlideArtworkTarget);
-            GlideApp.with(context).asBitmap().load(playList!![index].album?.image).into(simpleGlideAlbumArtworkTarget);
+            GlideApp.with(context).asBitmap().load(playableItem?.imageUrl).into(simpleGlideArtworkTarget);
+            GlideApp.with(context).asBitmap().load(playableItem?.album?.image).into(simpleGlideAlbumArtworkTarget);
 
             sendResult(currentTrackMetaDataBundleFactory(), FLAG_NEW_TRACK);
             startForeground(notificationId, generateNotification());
@@ -450,16 +459,11 @@ class AudioService : Service() {
 
 
     private fun getHttpDataSourceFactory(userAgent: String): DefaultHttpDataSourceFactory {
-        return DefaultHttpDataSourceFactory(
-                userAgent, exoTransferListener,
-                DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
-                DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
+        return DefaultHttpDataSourceFactory(userAgent, exoTransferListener, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
     }
 
     private fun getDefaultDataSourceFactory(userAgent: String): DefaultDataSourceFactory {
-        return DefaultDataSourceFactory(
-                context,
-                userAgent, exoTransferListener);
+        return DefaultDataSourceFactory(context, userAgent, exoTransferListener);
     }
 
     private fun getCacheDataSourceFactory(dataSourceFactory: DefaultHttpDataSourceFactory): CacheDataSourceFactory {
@@ -485,7 +489,7 @@ class AudioService : Service() {
             //mediaSourcesToLoad.add(ExtractorMediaSource(Uri.parse(resource), dataSource, DefaultExtractorsFactory(), mHandler, null));
         }
 
-        val dynamicConcatenatingMediaSource = DynamicConcatenatingMediaSource();
+        val dynamicConcatenatingMediaSource = ConcatenatingMediaSource();
         dynamicConcatenatingMediaSource.addMediaSources(0, mediaSourcesToLoad);
 
         return dynamicConcatenatingMediaSource
@@ -495,9 +499,8 @@ class AudioService : Service() {
         if (player != null)
             releasePlayer();
 
-        val trackSelector = DefaultTrackSelector();
         //val loadControl = DefaultLoadControl();
-        player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+        player = ExoPlayerFactory.newSimpleInstance(context, DefaultTrackSelector());
         player?.prepare(sources);
         player?.addListener(exoPlayerListener);
 
@@ -519,13 +522,13 @@ class AudioService : Service() {
 
         notificationCompat = NotificationCompat.Builder(context, CHANNEL_ID);
 
-        val playPauseAction: android.support.v4.app.NotificationCompat.Action = if (!player?.playWhenReady!!) {
-            android.support.v4.app.NotificationCompat.Action(
+        val playPauseAction: NotificationCompat.Action = if (!player?.playWhenReady!!) {
+            NotificationCompat.Action(
                     R.drawable.ic_play_white_36dp, "play",
                     MediaButtonReceiver.buildMediaButtonPendingIntent(this,
                             PlaybackStateCompat.ACTION_PLAY));
         } else {
-            android.support.v4.app.NotificationCompat.Action(
+            NotificationCompat.Action(
                     R.drawable.ic_pause_white_36dp, "pause",
                     MediaButtonReceiver.buildMediaButtonPendingIntent(this,
                             PlaybackStateCompat.ACTION_PAUSE));
@@ -560,7 +563,7 @@ class AudioService : Service() {
                 ?.setShowWhen(false)
                 ?.addAction(skipToPrev)
                 ?.addAction(playPauseAction)
-                ?.setPriority(Notification.PRIORITY_MAX)
+                //?.setPriority(Notification.PRIORITY_MAX)
                 ?.addAction(skipToNext);
 
         if (!player?.playWhenReady!!) {
@@ -570,7 +573,7 @@ class AudioService : Service() {
         notificationCompat
                 ?.setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
                 ?.setStyle(android.support.v4.media.app.NotificationCompat.MediaStyle()
-                        .setMediaSession(session?.sessionToken)
+                        .setMediaSession(mediaSession?.sessionToken)
                         .setShowActionsInCompactView(0, 1, 2, 3))
 
         if (Build.VERSION.SDK_INT in 24..25 && playableItem?.colors != null) {
@@ -585,30 +588,35 @@ class AudioService : Service() {
         return notificationCompat?.build();
     }
 
-    private fun mediaSession(): MediaSessionCompat {
+    private fun mediaSession() {
         val mediaButtonReceiver = ComponentName(applicationContext, MediaButtonReceiver::class.java)
 
-        val mSession = MediaSessionCompat(this, "mSession", mediaButtonReceiver, null)
-        mSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
+        mediaSession = MediaSessionCompat(this, "mSession", mediaButtonReceiver, null)
+        mediaSession?.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
 
         val mediaButtonIntent = Intent(Intent.ACTION_MEDIA_BUTTON)
         mediaButtonIntent.setClass(this, MediaButtonReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0)
-        mSession.setMediaButtonReceiver(pendingIntent)
+        mediaSession?.setMediaButtonReceiver(pendingIntent)
+
+        val mediaMetadata = MediaMetadata.Builder().putLong(MediaMetadata.METADATA_KEY_DURATION, -1L).build()
+        mediaSession?.setMetadata(MediaMetadataCompat.fromMediaMetadata(mediaMetadata))
 
         state = PlaybackStateCompat.Builder()
                 .setActions(PlaybackStateCompat.ACTION_SKIP_TO_NEXT or
                         PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
                         PlaybackStateCompat.ACTION_STOP or
                         PlaybackStateCompat.ACTION_PAUSE or
-                        PlaybackStateCompat.ACTION_PLAY);
+                        PlaybackStateCompat.ACTION_PLAY/* or
+                        PlaybackStateCompat.ACTION_SEEK_TO*/);
 
-        mSession.setPlaybackState(state?.build());
-        mSession.setCallback(mSessionCallBack);
-        mSession.isActive = true;
+//        if(player !== null) {
+//            state?.setState(player!!.playbackState, player!!.currentPosition, if(player!!.playbackState == PlaybackState.STATE_PLAYING) 1.0f else 0f);
+//        }
 
-        return mSession;
+        mediaSession?.setPlaybackState(state?.build());
+        mediaSession?.setCallback(mSessionCallBack);
+        mediaSession?.isActive = true;
     }
 
     //override methods
@@ -628,14 +636,15 @@ class AudioService : Service() {
         notificationId = System.currentTimeMillis().toInt();
         notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager;
 
-        session = mediaSession();
+        mediaSession();
     }
 
     override fun onDestroy() {
         super.onDestroy();
 
-        stopForeground(true);
-        notificationManager?.cancel(notificationId);
+        //stopForeground(true);
+        //notificationManager?.cancel(notificationId);
+        mediaSession?.release();
         unregisterBroadcastReceivers();
         unregisterPhoneStateListener();
         handler.removeCallbacks(updateProgressAction);
@@ -652,7 +661,7 @@ class AudioService : Service() {
         if (resultReceiver == null)
             resultReceiver = intent?.getParcelableExtra(AudioPlayer.ACTION_PLAYER_CONTROLLER);
 
-        MediaButtonReceiver.handleIntent(session, intent);
+        MediaButtonReceiver.handleIntent(mediaSession, intent);
 
         val jsonPlayList = intent?.getStringExtra("playList");
         val requestWindow = intent?.getIntExtra("index", -1);
