@@ -71,8 +71,6 @@ You'll need to use **Android Studio**.
 - Select a device or emulator with a screen size **equal or larger than 5 inch** (e.g. Nexus 5, Google Pixel, Galaxy S9) and run the project
 
 #### Common Android Studio issues
-
-<s>You may have to remove `fabric.properties` (if it exists) from the `/app` directory and let Gradle rebuild it.</s>
 - Be aware of the different results you may get when using quotation marks around values in `gradle.properties` file
 
 ### Setting up a server (IMPORTANT!)
