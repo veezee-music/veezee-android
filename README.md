@@ -34,10 +34,10 @@
 ## General features
 
 - Supports tracks, albums, playlists and genres
-- User management with email/password and **Google** (Supports cross-device sessions)
-- Supports remote (**MongoDB**) and local-offline (**Couchbase**) databases
+- User management with traditional email/password and **Google** (Supports cross-device sessions)
+- Local/offline (**Couchbase**) database support
 - **Offline mode**
-- **Theme support**
+- **Themes** support
 - Sharing
 
 ## Android version features
@@ -46,13 +46,14 @@
 - Optimized for all screen aspect ratios
 - Uses **ConstraintLayout**
 - RxKotlin (Limited use)
-- High performance audio streaming engine (using **[ExoPlayer](https://github.com/google/ExoPlayer)**)
+- High performance/quality audio streaming engine (using **[ExoPlayer](https://github.com/google/ExoPlayer)**)
 - Guest mode (Without login)
 - Many custom views for different pages
 - Beautiful animations and transitions
+- **Native Dark mode**
 - And more...
 
-## Things that are currently NOT planned
+## Things that are NOT supported/planned
 
 - Supporting devices with smaller screens (Minimum for Android is 5 inches)
 - Localization
@@ -71,7 +72,7 @@ You'll need to use **Android Studio**.
 
 #### Common Android Studio issues
 
-- You may have to remove `fabric.properties` (if it exists) from the `/app` directory and let Gradle rebuild it.
+<s>You may have to remove `fabric.properties` (if it exists) from the `/app` directory and let Gradle rebuild it.</s>
 - Be aware of the different results you may get when using quotation marks around values in `gradle.properties` file
 
 ### Setting up a server (IMPORTANT!)
